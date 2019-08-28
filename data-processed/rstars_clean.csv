@@ -1,0 +1,14 @@
+column,definition
+ancestor_id,ancestor_id
+treatment,"treatment (one of none, P, S, BS, L, N, P, B)"
+population,unique population ID
+p_ks,half saturation constant for P
+p_umax,max growth rate under unlimited P
+p_star,R* for P
+n_ks,half saturation constant for N
+n_umax,max growth rate under unlimited N
+n_star,R* for N
+i_star,R* for llight
+i_umax,max growth rate under unlimited light
+nc,consumption vector slope for N
+pc,consumption vector slope for P
