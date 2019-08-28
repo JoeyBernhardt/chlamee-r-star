@@ -1,0 +1,316 @@
+---
+title: "RDA-traits-treatments"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+library(cowplot)
+library(vegan)
+library(here)
+library(broom)
+
+all_sizes3 <- read_csv(here("data-processed", "all_cell_sizes_low_resources.csv"))
+
+scaled <- all_sizes3 %>% 
+	mutate(treatment = ifelse(treatment == "none", "Ancestors", treatment)) %>% 
+	filter(!is.na(phosphate_biovolume)) %>% 
+	mutate(avg_biovolume = (nitrate_biovolume + phosphate_biovolume)/3) %>%
+	mutate(avg_biovolume = scale(avg_biovolume)) %>%
+	mutate(nitrate_biovolume = scale(nitrate_biovolume)) %>%
+	mutate(n_star = scale(n_star)) %>%
+	mutate(p_star = scale(p_star)) %>%
+	mutate(i_star = scale(i_star)) %>%
+	mutate(nc = scale(nc)) %>%
+	mutate(pc = scale(pc)) %>%
+	mutate(phosphate_biovolume = scale(phosphate_biovolume)) %>%
+	mutate(light_biovolume = scale(light_biovolume)) %>%
+	select(n_star, p_star, phosphate_biovolume, i_star, nc, pc) 
+
+
+unscaled <- all_sizes3 %>% 
+	mutate(treatment = ifelse(treatment == "none", "Ancestors", treatment)) %>% 
+	mutate(treatment = factor(treatment,
+							  levels=c("Ancestors", "C", "L", "N",
+							  		 "P", "B", "S", "BS"))) %>% 
+	filter(!is.na(phosphate_biovolume)) %>% 
+	select(treatment) 
+
+
+cols_anc  <- c("black", "#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
+
+rda_res <- rda(scaled ~ unscaled$treatment, scale = FALSE)
+summary(rda_res)
+coef(rda_res)
+r2_adj <- RsquareAdj(rda_res)$adj.r.squared
+r2_adj
+r2 <- RsquareAdj(rda_res)$r.squared
+r2
+
+plot(rda_res)
+ordihull(rda_res, groups = unscaled$treatment, col = cols_anc, draw = "polygon")
+
+anova.cca(rda_res, by = "axis", step = 1000)
+
+?vegdist
+
+distances <- vegdist(scaled, method = "euclidean")
+
+
+ordination <- metaMDS(scaled,distance="euclidean",trymax=100)
+ordination$stress
+plot(ordination, type = "t",cex=.5)
+site.scaling <- as.data.frame(ordination$points)
+points(site.scaling,pch=16)
+
+mod <- betadisper(distances, unscaled$treatment)
+anova(mod)
+
+## Permutation test for F
+permutest(mod, pairwise = TRUE, permutations = 99)
+
+## Tukey's Honest Significant Differences
+(mod.HSD <- TukeyHSD(mod))
+plot(mod.HSD)
+boxplot(mod)
+
+### check to make sure treatment groups have equal dispersions
+mod3 <- betadisper(distances, unscaled$treatment, bias.adjust = TRUE)
+mod3
+permutest(mod3, permutations = 99)
+anova(mod3) ### this tells me that the treatments have equal dispersions
+plot(mod3)
+boxplot(mod3)
+plot(TukeyHSD(mod3))
+
+permanova <- unscaled$treatment %>% 
+  data_frame(treatment = .) %>% 
+  adonis(distances ~ treatment, data = .)
+
+permanova$aov.tab
+
+permanova2 <- unscaled$treatment %>% 
+  data_frame(treatment = .) %>% 
+  adonis2(distances ~ treatment, data = .)
+
+View(permanova2)
+
+?capscale
+# cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+cbbPalette <- c("black", "#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
+
+prot_table <- all_sizes3 %>% 
+	mutate(treatment = str_replace(treatment, "none", "Ancestors")) %>% 
+	mutate(treatment = str_replace(treatment, "C", "control")) %>% 
+	# mutate(treatment = ifelse(treatment == "none", "Ancestors", treatment)) %>% 
+	filter(!is.na(phosphate_biovolume)) %>% 
+	mutate(avg_biovolume = (nitrate_biovolume + phosphate_biovolume)/3) %>%
+	mutate(avg_biovolume = scale(avg_biovolume)) %>%
+	mutate(nitrate_biovolume = scale(nitrate_biovolume)) %>%
+	mutate(n_star = scale(n_star)) %>%
+	mutate(p_star = scale(p_star)) %>%
+	mutate(i_star = scale(i_star)) %>%
+	mutate(nc = scale(nc)) %>%
+	mutate(pc = scale(pc)) %>%
+	mutate(phosphate_biovolume = scale(phosphate_biovolume)) %>%
+	mutate(light_biovolume = scale(light_biovolume)) %>% 
+	select(n_star, p_star, phosphate_biovolume, i_star, nc, pc, ancestor_id, treatment) %>% 
+	dplyr::rename(Strain = ancestor_id) %>% 
+	dplyr::rename(Treatment = treatment) %>% 
+	mutate(Treatment = str_replace(Treatment, "C", "control")) %>% 
+	mutate(Treatment = factor(Treatment,
+							  levels=c("Ancestors", "control", "L", "N",
+							  		 "P", "B", "S", "BS"))) 
+
+spe <- dplyr::select(prot_table, -Treatment, -Strain)
+FULL.cap <- capscale(spe ~ Treatment + Condition(Strain), data=prot_table)
+FULL.cap_str <- capscale(spe ~ Strain + Condition(Treatment), data=prot_table)
+
+draw_rda(FULL.cap, "figures/rda_centroid_eb_treatment.pdf", "Treatment")
+draw_rda(FULL.cap_str, "figures/rda_centroid_eb_strain.pdf", "Strain")
+
+
+draw_rda <- function(FULL.cap, output_file, color_column)
+{
+    CAP1 <- scores(FULL.cap, display="wa", scaling=3)[,1]
+    CAP2 <- scores(FULL.cap, display="wa", scaling=3)[,2]
+    Res.dim <- as.data.frame(scores(FULL.cap, display="wa", scaling=3)[,1:2])
+    Res.dim$Strain <- prot_table$Strain
+    Res.dim$Treatment <- prot_table$Treatment
+    dplyr::group_by_(Res.dim, color_column) %>%
+        summarise(CAP1mean=mean(CAP1), CAP2mean=mean(CAP2), CAP1sd=sd(CAP1), CAP2sd=sd(CAP2)) %>%
+        ggplot(aes_string(x="CAP1mean", y="CAP2mean", color=color_column)) +
+        geom_point(data=Res.dim, aes_string(x="CAP1", y="CAP2", color=color_column)) +
+        geom_errorbarh(aes(xmin = CAP1mean - CAP1sd, xmax = CAP1mean + CAP1sd)) +
+        geom_errorbar(aes(ymin = CAP2mean - CAP2sd, ymax = CAP2mean + CAP2sd)) +
+        scale_colour_manual(values=cbbPalette) 
+    ggsave(filename=output_file, plot=last_plot())
+ }
+
+draw_rda(FULL.cap, "figures/rda_centroid_eb_treatment.pdf", "Treatment")
+draw_rda(FULL.cap_str, "figures/rda_centroid_eb_strain.pdf", "Strain")
+
+# Test for significant differences between Strains and Treatments
+anova(FULL.cap, data=prot_table) # Treatments: p < 0.001
+anova(FULL.cap_str, data=prot_table) # Strains: p = 0.762
+
+mod1 <- anova(FULL.cap, data=prot_table) # Treatments: p < 0.001
+scores(FULL.cap)$sites
+
+
+dist_test <- aov(lm(CAP2~Treatment, data=FULL.cap))
+TukeyHSD(anova(FULL.cap, data=prot_table))
+
+
+normalize_rda_anc <- function(Res.dim, norm_func)
+{
+    filter(Res.dim, Treatment=="Ancestors") %>% 
+        dplyr::group_by(Strain) %>% 
+        dplyr::summarise(CAP1mean=norm_func(CAP1), CAP2mean=norm_func(CAP2)) %>%
+        full_join(Res.dim, by="Strain") %>%
+        mutate(CAP1=CAP1-CAP1mean, CAP2=CAP2-CAP2mean) %>%
+        dplyr::select(-CAP1mean, -CAP2mean) %>%
+        filter(Treatment != "Ancestors")
+}
+
+normalize_rda <- function(Res.dim, norm_func)
+{
+    filter(Res.dim, Treatment=="control") %>% 
+        dplyr::group_by(Strain) %>% 
+        dplyr::summarise(CAP1mean=norm_func(CAP1), CAP2mean=norm_func(CAP2)) %>%
+        full_join(Res.dim, by="Strain") %>%
+        mutate(CAP1=CAP1-CAP1mean, CAP2=CAP2-CAP2mean) %>%
+        dplyr::select(-CAP1mean, -CAP2mean) %>%
+        filter(Treatment != "control")
+}
+
+draw_tukey <- function(dist_test, output_file)
+{
+    tuk1 <- TukeyHSD(dist_test)
+    psig <- as.numeric(apply(tuk1$Treatment[,2:3],1,prod)>=0)+1
+    op <- par(mar=c(4.2,9,3.8,2))
+    pdf(output_file)
+    plot(tuk1,col=psig,yaxt="n")
+    for (j in 1:length(psig)){
+        axis(2,at=j,labels=rownames(tuk1$Treatment)[length(psig)-j+1],
+             las=1,cex.axis=.8,col.axis=psig[length(psig)-j+1])
+    }
+    par(op)
+    dev.off()
+}
+
+## Test whether there's a difference on RDA axis 1
+Res.dim <- as.data.frame(scores(FULL.cap, display="wa", scaling=3)[,1:2])
+Res.dim$Strain <- prot_table$Strain
+Res.dim$Treatment <- prot_table$Treatment
+rda_norm <- normalize_rda(Res.dim, mean)
+
+
+### joey's significance tests
+dist_test_cap2 <- aov(lm(CAP2~Treatment, data=Res.dim))
+plot(TukeyHSD(dist_test_cap2))
+
+dist_test_cap1 <- aov(lm(CAP1~Treatment, data=Res.dim))
+plot(TukeyHSD(dist_test_cap1))
+
+dplyr::group_by(Res.dim, Treatment) %>% View
+
+shapiro.test(Res.dim$CAP1[Res.dim$Treatment == "control"])
+
+do(tidy(shapiro.test(CAP1))) %>% View
+
+## Test whether normality assumption holds for the data;
+## set the significance at p < 0.05
+dplyr::group_by(Res.dim, Treatment) %>%
+    dplyr::summarise(p_cap1 = tidy(shapiro.test(CAP1))$p.value,
+              p_cap2 = tidy(shapiro.test(CAP2))$p.value,
+              sig_cap1 = p_cap1 < 0.05,
+              sig_cap2 = p_cap2 < 0.05)
+## Only violated by CAP2 of Low light treatment (p = 0.0326)
+
+## Test the similarity of the variances
+lapply(c("S", "B", "L", "N", "P", "BS", "C"),
+       function(x) filter(Res.dim, Treatment == "control" | Treatment == x) %>%
+                   var.test(CAP1 ~ Treatment, data=.) %>%
+                   tidy) %>%
+    bind_rows  %>%
+    .$p.value
+
+lapply(c("S", "B", "L", "N", "P", "BS", "C"),
+       function(x) filter(Res.dim, Treatment == "control" | Treatment == x) %>%
+                   var.test(CAP2 ~ Treatment, data=.) %>%
+                   tidy) %>%
+    bind_rows  %>%
+    .$p.value
+## Only violated by P on CAP2 (p = 0.035). Otherwise p > 0.5
+
+dist_test <- aov(lm(CAP1~Treatment, data=rda_norm))
+TukeyHSD(dist_test)
+draw_tukey(dist_test, "figures/rda1_tukey2.pdf")
+
+## Test whether there's a difference on RDA axis 2
+dist_test <- aov(lm(CAP2~Treatment, data=rda_norm))
+TukeyHSD(dist_test)
+draw_tukey(dist_test, "figures/rda2_tukey2.pdf")
+
+## Define a function to calculate the treatment angles and distances from the ancestral origin
+calculate_angles <- function(rda_norm, norm_func)
+{
+    rda_norm <- normalize_rda(rda_norm, norm_func)
+    treatment_angle <- as.factor(rda_norm$Treatment)
+    levels(treatment_angle) <- c(270, 270, 90, 270, 270, 270, 270)
+    treatment_angle <- as.numeric(as.character(treatment_angle))
+    treatment_angle[21] <- 270
+    rda_norm$Angle <- -atan(rda_norm$CAP2/rda_norm$CAP1) * 180 / pi + treatment_angle
+    rda_norm$Dist <- sqrt(rda_norm$CAP1^2 + rda_norm$CAP2^2)
+    rda_means <- group_by(rda_norm, Treatment) %>%
+        summarise(Mean_angle=mean(Angle), Mean_dist=mean(Dist))
+    rda_norm <- rbind(rda_norm, rda_norm[1,])
+    rda_norm[length(rda_norm$Angle),'Angle'] <- 360
+    rda_norm[length(rda_norm$Angle),'Dist'] <- 0
+    rda_norm <- rbind(rda_norm, rda_norm[1,])
+    rda_norm[length(rda_norm$Angle),'Angle'] <- 0
+    rda_norm[length(rda_norm$Angle),'Dist'] <- 0
+    rda_list <- list(norm=rda_norm, means=rda_means)
+    return(rda_list)
+}
+
+## Define a function to draw the polar plots
+draw_angles <- function(rda_list, output_file)
+{
+    rda_norm <- rda_list[['norm']]
+    rda_means <- rda_list[['means']]
+    ggplot() +
+        geom_point(data=rda_norm, aes(x=Angle, y=Dist, color=Treatment)) + 
+        geom_point(data=rda_means,
+                   aes(x=Mean_angle, y=Mean_dist, color=Treatment, size=5)) +
+        coord_polar(theta="x", start=0) +
+        scale_colour_manual(values=cbbPalette) + theme_bw()
+    ggsave(filename=output_file, plot=last_plot())
+}
+
+## Draw the polar plots
+calculate_angles(Res.dim, mean) %>%
+    draw_angles("figures/polar_plot_mean.pdf")
+
+## Perform Tukey tests to check which treatments are significantly different in their direction or distances
+angle_norm <- calculate_angles(Res.dim, mean)[['norm']]
+dist_test <- aov(lm(Angle~Treatment, data=angle_norm))
+draw_tukey(dist_test, "figures/angle_tukey.pdf")
+
+dist_test <- aov(lm(Dist~Treatment, data=angle_norm))
+draw_tukey(dist_test, "figures/dist_tukey.pdf")
+
+```
