@@ -5,6 +5,7 @@ library(here)
 library(janitor)
 library(cowplot)
 library(broom)
+library(tidyverse)
 
 treatments <- read_excel(here("data-general", "ChlamEE_Treatments_JB.xlsx")) %>%
 	clean_names() %>%
@@ -81,7 +82,7 @@ phosphate <- left_join(phosphate_abundances, treatments, by = "population") %>%
 	left_join(., p2) %>% 
 	left_join(., exponential_fits) %>% 
 	filter(time_point <= number_of_points)
-	
+write_csv(phosphate, "data-processed/phosphate-exponential.csv")	
 
 phosphate %>% 
 	# filter(population == 16, phosphate_concentration == 50) %>% View
