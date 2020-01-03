@@ -1,10 +1,15 @@
 
 
-library(beyonce)
+
 library(tidyverse)
 library(cowplot)
 library(plotrix)
 
+theme_set(theme_cowplot())
+
+
+cols_no_anc  <- c("#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
+cols_no_anc2  <- c("#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
 
 ### Figure 2 trait changes relative to ancestors
 
@@ -14,7 +19,6 @@ salt_tol_CI <- read_csv("data-processed/salt-tol-CI-boot-12.csv") %>%
 							  		 "P", "B", "S", "BS"))) %>% 
 	mutate(diversity = ifelse(ancestor_id == "cc1690", "Genotypically diverse", "Isoclonal"))
 
-View(salt_tol_CI)
 
 salt_tol_CI_sum <- salt_tol_CI %>% 
 	group_by(treatment) %>% 
@@ -147,6 +151,9 @@ consvecs_sum <- consvecs %>%
 consvecs2 <- bind_rows(consvecs, consvecs_sum) %>% 
 	mutate(change_consvec_lower = ifelse(is.na(change_consvec_lower), 0, change_consvec_lower)) %>% 
 	mutate(change_consvec_upper = ifelse(is.na(change_consvec_upper), 0, change_consvec_upper))
+
+# start plotting here -----------------------------------------------------
+
 
 
 plot_pn <- consvecs2 %>%
@@ -323,8 +330,7 @@ consvecs %>%
 ggsave("figures/change-cons-vec.png", width = 6, height = 4)
 
 
-cols_no_anc  <- c("#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
-cols_no_anc2  <- c("#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
+
 
 
 salt_tol_CI3 <- salt_tol_CI2 %>%
@@ -395,7 +401,8 @@ show_col(viridis_pal()(10))
 show_col(cola)
 cola <- cols_no_anc2
 
-plot_I <- rstar_CI_i2 %>% 
+# plot_I <- 
+	rstar_CI_i2 %>% 
 	mutate(treatment = str_replace(treatment, "Ancestors", "A")) %>% 
 	mutate(treatment = factor(treatment,
 							  levels=c("A", "C", "L", "N",
@@ -404,8 +411,6 @@ plot_I <- rstar_CI_i2 %>%
 							  levels=c("treatment_average", "Genotypically diverse", "Isoclonal"))) %>% 
 	mutate(diversity2 = ifelse(diversity == "treatment_average", 0.2, 0.1)) %>% 
 	mutate(diversity2 = as.numeric(diversity2)) %>% 
-	# filter(treatment %in% c("A", "L")) %>% 
-	# filter(diversity == "Genotypically diverse") %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment)) + 
 	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 					position=position_jitterdodge(jitter.width = 0.8, jitter.height = 0,
