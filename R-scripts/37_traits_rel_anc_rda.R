@@ -366,6 +366,7 @@ rda_plot <- ggplot() +
 		  legend.title = element_text(colour="black", size=16),
 		  legend.text = element_text(colour="black", size=16))
 ggsave("figures/rda-traits-all-traits.png", width = 8, height = 6)
+ggsave("figures/rda-traits-all-traits.pdf", width = 11.5, height = 6.8)
 
 dims_anc <- dims %>% 
 	filter(Treatment == "Ancestors") %>% 

@@ -365,6 +365,61 @@ plot_pn <- consvecs2 %>%
 	scale_shape_manual(values = c(19, 25, 19))
 ggsave("figures/change-cons-vecs.png", width = 6, height = 4)
 
+
+
+# Salt plot ---------------------------------------------------------------
+
+salt <- salt_tol_CI2 %>% 
+	mutate(treatment = str_replace(treatment, "Ancestors", "A")) %>% 
+	mutate(treatment = factor(treatment,
+							  levels=c("A", "C", "L", "N",
+							  		 "P", "B", "S", "BS"))) %>% 
+	mutate(diversity = factor(diversity,
+							  levels=c("treatment_average", "Genotypically diverse", "Isoclonal"))) %>% 
+	mutate(diversity2 = ifelse(diversity == "treatment_average", 0.2, 0.1)) %>% 
+	mutate(diversity2 = as.numeric(diversity2)) %>%
+	mutate(treatment2 = as.character(treatment)) %>% 
+	group_by(treatment) %>% 
+	mutate(rank = dense_rank((change_salt_tol_mean))) %>% 
+	mutate(diversity = str_replace(diversity, "Genotypically", "AGenotypically")) %>% 
+	mutate(treatment_order = case_when(treatment == "A" ~ "1A",
+									   treatment == "C" ~ "2C",
+									   treatment == "L" ~ "3L",
+									   treatment == "N" ~ "4N",
+									   treatment == "P" ~ "5P",
+									   treatment == "B" ~ "6B",
+									   treatment == "S" ~ "7S",
+									   treatment == "BS" ~ "8BS")) %>% 
+	mutate(unique_treatment = paste(treatment_order, rank, sep = "_")) %>% 
+	mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
+
+
+salt %>% 
+	ggplot(aes(x = treatment, y = change_salt_tol_mean, color = treatment, fill = treatment)) + 
+	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
+								   y = change_salt_tol_mean, ymin = change_salt_tol_lower, ymax = change_salt_tol_upper),
+					position=position_dodge2(width = 0.01), data = salt) +
+	geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_salt_tol_mean, color = treatment)) +
+	# geom_bar(width = 0.4, alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+	# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
+	geom_hline(yintercept = 0) +
+	ylab(expression("Change in salt tolerance" ~ (g ~ L^{-1}))) +
+	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
+	scale_fill_manual(values = c("black", cols_no_anc)) +
+	theme(legend.position="none",
+		  axis.text = element_text(size=22),
+		  axis.title=element_text(size=22)) +
+	scale_size(range = c(0.7, 1.2)) +
+	scale_shape_manual(values = c(25, 19, 19))  +
+	theme(axis.title.x=element_blank(),
+		  axis.text.x=element_blank(),
+		  axis.ticks.x=element_blank()) +
+	scale_y_continuous(labels = scales::number_format(accuracy = 1))
+ggsave("figures/salt-trait-change-95CI-sub-S-order.pdf", width = 7, height = 3.95)
+
+
+
+
 plot_salt <- salt_tol_CI2 %>%
 	mutate(treatment = str_replace(treatment, "Ancestors", "A")) %>% 
 	mutate(treatment = factor(treatment,
@@ -402,7 +457,7 @@ show_col(cola)
 cola <- cols_no_anc2
 
 # plot_I <- 
-	rstar_CI_i2 %>% 
+	ri <- rstar_CI_i2 %>% 
 	mutate(treatment = str_replace(treatment, "Ancestors", "A")) %>% 
 	mutate(treatment = factor(treatment,
 							  levels=c("A", "C", "L", "N",
@@ -410,23 +465,58 @@ cola <- cols_no_anc2
 	mutate(diversity = factor(diversity,
 							  levels=c("treatment_average", "Genotypically diverse", "Isoclonal"))) %>% 
 	mutate(diversity2 = ifelse(diversity == "treatment_average", 0.2, 0.1)) %>% 
-	mutate(diversity2 = as.numeric(diversity2)) %>% 
-	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment)) + 
-	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
-					position=position_jitterdodge(jitter.width = 0.8, jitter.height = 0,
-												dodge.width = 0.3, seed = 1)) +
-	geom_hline(yintercept = 0) +
+	mutate(diversity2 = as.numeric(diversity2)) %>%
+		mutate(treatment2 = as.character(treatment)) %>% 
+		group_by(treatment) %>% 
+		mutate(rank = dense_rank((change_rstar_mean))) %>% 
+		mutate(diversity = str_replace(diversity, "Genotypically", "AGenotypically")) %>% 
+		mutate(treatment_order = case_when(treatment == "A" ~ "1A",
+										   treatment == "C" ~ "2C",
+										   treatment == "L" ~ "3L",
+										   treatment == "N" ~ "4N",
+										   treatment == "P" ~ "5P",
+										   treatment == "B" ~ "6B",
+										   treatment == "S" ~ "7S",
+										   treatment == "BS" ~ "8BS")) %>% 
+		mutate(unique_treatment = paste(treatment_order, rank, sep = "_")) %>% 
+		mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
+	
+
+	# plot_I <- 
+		
+		ri %>% 
+	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
+		geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
+										 y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+						position=position_dodge2(width = 0.01), data = ri) +
+			geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_rstar_mean, color = treatment)) +
+			# geom_bar(width = 0.4, alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+			# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
+		geom_hline(yintercept = 0) +
 	ylab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1}))) +
 	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
+			scale_fill_manual(values = c("black", cols_no_anc)) +
 	theme(legend.position="none",
-		  axis.text = element_text(size=16),
-		  axis.title=element_text(size=16)) +
+		  axis.text = element_text(size=20),
+		  axis.title=element_text(size=20)) +
 	scale_size(range = c(0.7, 1.2)) +
-	# scale_size(range = c(0.4)) +
-	scale_shape_manual(values = c(19, 25, 19)) 
-ggsave("figures/i-star-trait-change-95CI-sub-L.png", width = 2, height = 5)
+	scale_shape_manual(values = c(25, 19, 19))  +
+		theme(axis.title.x=element_blank(),
+			  axis.text.x=element_blank(),
+			  axis.ticks.x=element_blank())
+# ggsave("figures/i-star-trait-change-95CI-sub-L-order.png", width = 10, height = 4)
+ggsave("figures/i-star-trait-change-95CI-sub-L-order.pdf", width = 7, height = 3.92)
 
-plot_N <- rstar_CI_n2 %>% 
+
+ggplot() +
+geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = reorder(unique_treatment, change_rstar_mean), y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+				position=position_dodge2(width = 0.1), data = filter(ri, treatment == "N"))
+
+
+
+
+
+rn <- rstar_CI_n2 %>% 
 	mutate(treatment = str_replace(treatment, "Ancestors", "A")) %>% 
 	mutate(treatment = factor(treatment,
 							  levels=c("A", "C", "L", "N",
@@ -434,26 +524,49 @@ plot_N <- rstar_CI_n2 %>%
 	mutate(diversity = factor(diversity,
 							  levels=c("treatment_average", "Genotypically diverse", "Isoclonal"))) %>% 
 	mutate(diversity2 = ifelse(diversity == "treatment_average", 0.2, 0.1)) %>% 
-	mutate(diversity2 = as.numeric(diversity2)) %>% 
-	# filter(treatment %in% c("A", "N")) %>% 
-	# filter(diversity == "Genotypically diverse") %>% 
-	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment)) + 
-	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
-					position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
-												  dodge.width = 0, seed = 1)) +
+	mutate(diversity2 = as.numeric(diversity2)) %>%
+	mutate(treatment2 = as.character(treatment)) %>% 
+	group_by(treatment) %>% 
+	mutate(rank = dense_rank((change_rstar_mean))) %>% 
+	mutate(diversity = str_replace(diversity, "Genotypically", "AGenotypically")) %>% 
+	mutate(treatment_order = case_when(treatment == "A" ~ "1A",
+									   treatment == "C" ~ "2C",
+									   treatment == "L" ~ "3L",
+									   treatment == "N" ~ "4N",
+									   treatment == "P" ~ "5P",
+									   treatment == "B" ~ "6B",
+									   treatment == "S" ~ "7S",
+									   treatment == "BS" ~ "8BS")) %>% 
+	mutate(unique_treatment = paste(treatment_order, rank, sep = "_")) %>% 
+	mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
+
+
+rn %>% 
+	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
+	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
+								   y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+					position=position_dodge2(width = 0.01), data = rn) +
+	geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_rstar_mean, color = treatment)) +
+	# geom_bar(width = 0.4, alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+	# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
 	geom_hline(yintercept = 0) +
 	ylab("Change in N* (uM N)") +
-	xlab("") +  scale_color_manual(values = c("black", cols_no_anc)) +
+	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
+	scale_fill_manual(values = c("black", cols_no_anc)) +
 	theme(legend.position="none",
-		  axis.text = element_text(size=16),
-		  axis.title=element_text(size=16)) +
+		  axis.text = element_text(size=20),
+		  axis.title=element_text(size=20)) +
 	scale_size(range = c(0.7, 1.2)) +
-	# scale_size(range = c(0.4)) +
-	scale_shape_manual(values = c(19, 25, 19)) 
-ggsave("figures/n-star-trait-change-95CI-sub-N.png", width = 2, height = 5)
+	scale_shape_manual(values = c(25, 19, 19))  +
+	theme(axis.title.x=element_blank(),
+		  axis.text.x=element_blank(),
+		  axis.ticks.x=element_blank())
+ggsave("figures/n-star-trait-change-95CI-sub-N-order.pdf", width = 7, height = 3.92)
 
 
-plot_P <- rstar_CI_p2 %>% 
+# P plot ------------------------------------------------------------------
+
+rp <- rstar_CI_p2 %>% 
 	mutate(treatment = str_replace(treatment, "Ancestors", "A")) %>% 
 	mutate(treatment = factor(treatment,
 							  levels=c("A", "C", "L", "N",
@@ -461,23 +574,91 @@ plot_P <- rstar_CI_p2 %>%
 	mutate(diversity = factor(diversity,
 							  levels=c("treatment_average", "Genotypically diverse", "Isoclonal"))) %>% 
 	mutate(diversity2 = ifelse(diversity == "treatment_average", 0.2, 0.1)) %>% 
-	mutate(diversity2 = as.numeric(diversity2)) %>% 
-	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment)) + 
-	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
-					position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
-												  dodge.width = 0, seed = NA)) +
+	mutate(diversity2 = as.numeric(diversity2)) %>%
+	mutate(treatment2 = as.character(treatment)) %>% 
+	group_by(treatment) %>% 
+	mutate(rank = dense_rank((change_rstar_mean))) %>% 
+	mutate(diversity = str_replace(diversity, "Genotypically", "AGenotypically")) %>% 
+	mutate(treatment_order = case_when(treatment == "A" ~ "1A",
+									   treatment == "C" ~ "2C",
+									   treatment == "L" ~ "3L",
+									   treatment == "N" ~ "4N",
+									   treatment == "P" ~ "5P",
+									   treatment == "B" ~ "6B",
+									   treatment == "S" ~ "7S",
+									   treatment == "BS" ~ "8BS")) %>% 
+	mutate(unique_treatment = paste(treatment_order, rank, sep = "_")) %>% 
+	mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
+
+
+rp %>% 
+	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
+	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
+								   y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+					position=position_dodge2(width = 0.01), data = rp) +
+	geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_rstar_mean, color = treatment)) +
+	# geom_bar(width = 0.4, alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+	# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
 	geom_hline(yintercept = 0) +
 	ylab("Change in P* (uM P)") +
-	xlab("") +
-	scale_color_manual(values = c("black", cols_no_anc)) +
+	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
+	scale_fill_manual(values = c("black", cols_no_anc)) +
 	theme(legend.position="none",
-		  axis.text = element_text(size=16),
-		  axis.title=element_text(size=16)) + 
-	# scale_size(range = c(0.4)) +
+		  axis.text = element_text(size=20),
+		  axis.title=element_text(size=20)) +
 	scale_size(range = c(0.7, 1.2)) +
-	# scale_shape_manual(values = c(25)) +
-	scale_shape_manual(values = c(19, 25, 19)) 
-ggsave("figures/p-star-trait-change-95CI.png", width = 6, height = 4)
+	scale_shape_manual(values = c(25, 19, 19))  +
+	theme(axis.title.x=element_blank(),
+		  axis.text.x=element_blank(),
+		  axis.ticks.x=element_blank()) +
+	scale_y_continuous(labels = scales::number_format(accuracy = 0.1), breaks = c(-0.5, 0, 0.5, 1.0))
+ggsave("figures/p-star-trait-change-95CI-sub-P-order.pdf", width = 7, height = 3.92)
+
+
+
+
+# rn %>% 
+# 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment)) + 
+# 	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+# 					position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
+# 												  dodge.width = 0, seed = 1)) +
+# 	geom_hline(yintercept = 0) +
+# 	ylab("Change in N* (uM N)") +
+# 	xlab("") +  scale_color_manual(values = c("black", cols_no_anc)) +
+# 	theme(legend.position="none",
+# 		  axis.text = element_text(size=16),
+# 		  axis.title=element_text(size=16)) +
+# 	scale_size(range = c(0.7, 1.2)) +
+# 	# scale_size(range = c(0.4)) +
+# 	scale_shape_manual(values = c(19, 25, 19)) 
+# ggsave("figures/n-star-trait-change-95CI-sub-N.png", width = 2, height = 5)
+
+
+# plot_P <- rstar_CI_p2 %>% 
+# 	mutate(treatment = str_replace(treatment, "Ancestors", "A")) %>% 
+# 	mutate(treatment = factor(treatment,
+# 							  levels=c("A", "C", "L", "N",
+# 							  		 "P", "B", "S", "BS"))) %>% 
+# 	mutate(diversity = factor(diversity,
+# 							  levels=c("treatment_average", "Genotypically diverse", "Isoclonal"))) %>% 
+# 	mutate(diversity2 = ifelse(diversity == "treatment_average", 0.2, 0.1)) %>% 
+# 	mutate(diversity2 = as.numeric(diversity2)) %>% 
+# 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment)) + 
+# 	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+# 					position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
+# 												  dodge.width = 0, seed = NA)) +
+# 	geom_hline(yintercept = 0) +
+# 	ylab("Change in P* (uM P)") +
+# 	xlab("") +
+# 	scale_color_manual(values = c("black", cols_no_anc)) +
+# 	theme(legend.position="none",
+# 		  axis.text = element_text(size=16),
+# 		  axis.title=element_text(size=16)) + 
+# 	# scale_size(range = c(0.4)) +
+# 	scale_size(range = c(0.7, 1.2)) +
+# 	# scale_shape_manual(values = c(25)) +
+# 	scale_shape_manual(values = c(19, 25, 19)) 
+# ggsave("figures/p-star-trait-change-95CI.png", width = 6, height = 4)
 ggsave("figures/p-star-trait-change-95CI-sub.png", width = 2, height = 5)
 
 plot4leg <- rstar_CI_p2 %>% 
