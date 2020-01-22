@@ -360,15 +360,15 @@ rda_plot <- ggplot() +
 	xlab("RDA1 (56.61% of constrained variation)") + ylab("RDA2 (28.34% of constrained variation)") +
 	# geom_text(aes(x = CAP1, y = CAP2, label = trait), data = trait_vectors, color = "black", size = 5.5,
 	# 		  hjust = 0, nudge_x = -0.29, nudge_y = 0.27) + 
-	theme(legend.position = c(0.01, 0.2),
-		  axis.text = element_text(size=18),
-		  axis.title=element_text(size=18),
-		  legend.title = element_text(colour="black", size=16),
-		  legend.text = element_text(colour="black", size=16))
+	theme(legend.position = c(0.01, 0.27),
+		  axis.text = element_text(size=24),
+		  axis.title=element_text(size=24),
+		  legend.title = element_text(colour="black", size=24),
+		  legend.text = element_text(colour="black", size=24)) 
 ggsave("figures/rda-traits-all-traits.png", width = 8, height = 6)
 ggsave("figures/rda-traits-all-traits.pdf", width = 11.5, height = 6.8)
 
-dims_anc <- dims %>% 
+	dims_anc <- dims %>% 
 	filter(Treatment == "Ancestors") %>% 
 	dplyr::rename(anc_cap1 = CAP1) %>% 
 	dplyr::rename(anc_cap2 = CAP2) %>% 

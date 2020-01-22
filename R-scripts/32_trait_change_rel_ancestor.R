@@ -394,7 +394,7 @@ salt <- salt_tol_CI2 %>%
 	mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
 
 
-salt %>% 
+splot <- salt %>% 
 	ggplot(aes(x = treatment, y = change_salt_tol_mean, color = treatment, fill = treatment)) + 
 	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_salt_tol_mean, ymin = change_salt_tol_lower, ymax = change_salt_tol_upper),
@@ -406,17 +406,42 @@ salt %>%
 	ylab(expression("Change in salt tolerance" ~ (g ~ L^{-1}))) +
 	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
 	scale_fill_manual(values = c("black", cols_no_anc)) +
-	theme(legend.position="none",
-		  axis.text = element_text(size=22),
-		  axis.title=element_text(size=22)) +
+	# theme(legend.position="none",
+	# 	  axis.text = element_text(size=19),
+	# 	  axis.title=element_text(size=19)) +
+	
+	theme(
+		  axis.text = element_text(size=19),
+		  axis.title=element_text(size=19)) +
 	scale_size(range = c(0.7, 1.2)) +
 	scale_shape_manual(values = c(25, 19, 19))  +
 	theme(axis.title.x=element_blank(),
 		  axis.text.x=element_blank(),
 		  axis.ticks.x=element_blank()) +
-	scale_y_continuous(labels = scales::number_format(accuracy = 1))
+	scale_y_continuous(labels = scales::number_format(accuracy = 1)) 
+ggsave("figures/salt-trait-change-95CI-sub-S-order-wide.pdf", width = 6, height = 4.5)
 ggsave("figures/salt-trait-change-95CI-sub-S-order.pdf", width = 7, height = 3.95)
+ggsave("figures/salt-trait-change-95CI-sub-S-order-hor.pdf", width = 4.5, height = 5.6)
 
+
+salt %>% 
+	filter(treatment == "A") %>% 
+	ggplot(aes(x = treatment, y = change_salt_tol_mean, color = treatment, fill = treatment)) + 
+	geom_point(alpha = 1, aes(shape = diversity, size = diversity2)) +
+	# geom_hline(yintercept = 0) +
+	ylab(expression("Change in salt tolerance" ~ (g ~ L^{-1}))) +
+	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
+	scale_fill_manual(values = c("black", cols_no_anc)) +
+	theme(
+		axis.text = element_text(size=19),
+		axis.title=element_text(size=19)) +
+	scale_size(range = c(0.7, 1.2)) +
+	scale_shape_manual(values = c(25, 19, 19))  +
+	theme(axis.title.x=element_blank(),
+		  axis.text.x=element_blank(),
+		  axis.ticks.x=element_blank()) +
+	scale_y_continuous(labels = scales::number_format(accuracy = 1)) 
+ggsave("figures/change-fig-legend.pdf", width = 4, height = 4)
 
 
 
@@ -482,9 +507,11 @@ cola <- cols_no_anc2
 		mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
 	
 
+	
 	# plot_I <- 
-		
-		ri %>% 
+	
+# light plot --------------------------------------------------------------		
+	iplot <- 	ri %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
 		geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 										 y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
@@ -497,15 +524,18 @@ cola <- cols_no_anc2
 	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
 			scale_fill_manual(values = c("black", cols_no_anc)) +
 	theme(legend.position="none",
-		  axis.text = element_text(size=20),
-		  axis.title=element_text(size=20)) +
+		  axis.text = element_text(size=19),
+		  axis.title=element_text(size=19)) +
 	scale_size(range = c(0.7, 1.2)) +
 	scale_shape_manual(values = c(25, 19, 19))  +
 		theme(axis.title.x=element_blank(),
-			  axis.text.x=element_blank(),
+			  axis.text.x =element_blank(),
 			  axis.ticks.x=element_blank())
 # ggsave("figures/i-star-trait-change-95CI-sub-L-order.png", width = 10, height = 4)
 ggsave("figures/i-star-trait-change-95CI-sub-L-order.pdf", width = 7, height = 3.92)
+ggsave("figures/i-star-trait-change-95CI-sub-L-order-hor.pdf", width = 4.5, height = 5.6)
+
+
 
 
 ggplot() +
@@ -541,7 +571,10 @@ rn <- rstar_CI_n2 %>%
 	mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
 
 
-rn %>% 
+# Nitrogen plot -----------------------------------------------------------
+
+
+nplot <- rn %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
 	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
@@ -554,14 +587,16 @@ rn %>%
 	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
 	scale_fill_manual(values = c("black", cols_no_anc)) +
 	theme(legend.position="none",
-		  axis.text = element_text(size=20),
-		  axis.title=element_text(size=20)) +
+		  axis.text = element_text(size=19),
+		  axis.title=element_text(size=19)) +
 	scale_size(range = c(0.7, 1.2)) +
 	scale_shape_manual(values = c(25, 19, 19))  +
-	theme(axis.title.x=element_blank(),
+	theme(axis.title.x = element_blank(),
 		  axis.text.x=element_blank(),
-		  axis.ticks.x=element_blank())
+		  axis.ticks.x=element_blank()) 
+ggsave("figures/n-star-trait-change-95CI-sub-N-order.pdf", width = 6, height = 4.5)
 ggsave("figures/n-star-trait-change-95CI-sub-N-order.pdf", width = 7, height = 3.92)
+ggsave("figures/n-star-trait-change-95CI-sub-N-order-hor.pdf", width = 4.5, height = 5.6)
 
 
 # P plot ------------------------------------------------------------------
@@ -591,7 +626,7 @@ rp <- rstar_CI_p2 %>%
 	mutate(unique_treatment = str_replace(unique_treatment, "anc", "danc")) 
 
 
-rp %>% 
+pplot <- rp %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
 	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
@@ -603,17 +638,36 @@ rp %>%
 	ylab("Change in P* (uM P)") +
 	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
 	scale_fill_manual(values = c("black", cols_no_anc)) +
-	theme(legend.position="none",
-		  axis.text = element_text(size=20),
-		  axis.title=element_text(size=20)) +
+	theme(legend.position= "none",
+		  axis.text = element_text(size=19),
+		  axis.title=element_text(size=19)) +
 	scale_size(range = c(0.7, 1.2)) +
 	scale_shape_manual(values = c(25, 19, 19))  +
 	theme(axis.title.x=element_blank(),
 		  axis.text.x=element_blank(),
 		  axis.ticks.x=element_blank()) +
-	scale_y_continuous(labels = scales::number_format(accuracy = 0.1), breaks = c(-0.5, 0, 0.5, 1.0))
+	scale_y_continuous(labels = scales::number_format(accuracy = 0.1)) 
 ggsave("figures/p-star-trait-change-95CI-sub-P-order.pdf", width = 7, height = 3.92)
+ggsave("figures/p-star-trait-change-95CI-sub-P-order-wide.pdf", width = 6, height = 4.5)
+ggsave("figures/p-star-trait-change-95CI-sub-P-order-hor.pdf", width = 4.5, height = 5.6)
 
+
+
+
+# all plots ---------------------------------------------------------------
+
+
+
+allplots <- plot_grid(pplot, nplot, iplot, splot, labels = c("A", "B", "C", "D"),
+					  align = "v", nrow = 2, ncol = 2, label_size = 18, label_x = 0.08, label_y = 1.02)
+
+
+save_plot("figures/all-change-plots.pdf", allplots,
+		  ncol = 2, # we're saving a grid plot of 2 columns
+		  nrow = 2, # and 2 rows
+		  # each individual subplot should have an aspect ratio of 1.3
+		  base_aspect_ratio = 1.4
+)
 
 
 
@@ -673,7 +727,7 @@ plot4leg <- rstar_CI_p2 %>%
 	filter(diversity %in% c("Genotypically diverse", "Isoclonal")) %>% 
 	mutate(diversity = factor(diversity, levels = c("Isoclonal", "Genotypically diverse"))) %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment)) + 
-	geom_pointrange(alpha = 0.7, aes(shape = diversity, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
+	geom_pointrange(alpha = 1, aes(shape = diversity, x = treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 					position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
 												  dodge.width = 0, seed = 1)) +
 	geom_hline(yintercept = 0) +

@@ -1,9 +1,11 @@
 ### conceptual figures
 library(tidyverse)
 library(cowplot)
-library(extrafont)
-font_import() # import all your fonts
-fonts() 
+library(readxl)
+library(here)
+library(janitor)
+theme_set(theme_cowplot())
+
 
 
 
@@ -120,6 +122,47 @@ gp <- p + stat_function(fun = monod_function_slow, color = "lightblue", size = 2
 	scale_color_manual(values = c("deepskyblue4", "orange", "lightblue"), name = "") + 
 	panel_border(colour = "black", size = 1) 
 ggsave("figures/conceptual-monod.pdf", width = 6, height = 4.6)
+
+
+### gleaner opportunist
+
+monod_function_fast <- function(x, umax = 1.5, ks = 10, m = 0.5){
+	growth_rate <- (umax * x / (ks+x)) - m
+	growth_rate
+} 
+
+monod_function_slow <- function(x, umax = 1, ks = 0.8, m = 0.5){
+	growth_rate <- (umax * x / (ks+x)) - m
+	growth_rate
+} 
+
+
+	p + stat_function(fun = monod_function_slow, color = "darkgreen", size = 2) +
+		stat_function(fun = monod_function_fast, color = "deepskyblue4", size = 2) +
+		coord_cartesian() + geom_hline(yintercept = 0) +
+		geom_point(aes(x = r_star, y = 0, color = type), data = filter(rstar_concept, type != "med"), size = 7) +
+		geom_point(aes(x = r_star, y = 0), data = filter(rstar_concept, type != "med"), size = 7, shape = 1, color = "black") +
+		labs(y = expression ("Population growth rate"~day^-1)) +
+		xlab("Resource concentration") +
+		theme( 
+			axis.text = element_text(size=22, color = "black"),
+			axis.title=element_text(size=22, color = "black"),
+			legend.position = "none") +
+		scale_color_manual(values = c("deepskyblue4","darkgreen"), name = "") + 
+		geom_hline(yintercept = 1, color = "deepskyblue4", linetype = "dashed") + xlim(0, 100) +
+		geom_hline(yintercept = 0.5, color = "darkgreen", linetype = "dashed") 
+ggsave("figures/gleaner-opportunist-diagram.pdf", width = 6.6, height = 4.6)
+ggsave("figures/gleaner-opportunist-diagram.png", width = 6.6, height = 5)
+
+
+r_star <-  (0.8*0.5)/(1-0.5)
+r_star2 <-  (10*0.5)/(1.5-0.5)
+
+p + geom_point(aes(x = 0.8, y = 0.5), color = "darkgreen", size = 3)  +
+	geom_point(aes(x = 5, y = 1), size = 3, color = "deepskyblue4") +ylab("μmax") +
+	xlab("R*")
+ggsave("figures/gleaner-opportunist-points.pdf", width = 3, height = 2)
+ggsave("figures/gleaner-opportunist-points.png", width = 3, height = 2)
 
 
 ## big house fast car
