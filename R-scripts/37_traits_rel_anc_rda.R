@@ -361,11 +361,11 @@ rda_plot <- ggplot() +
 	# geom_text(aes(x = CAP1, y = CAP2, label = trait), data = trait_vectors, color = "black", size = 5.5,
 	# 		  hjust = 0, nudge_x = -0.29, nudge_y = 0.27) + 
 	theme(legend.position = c(0.01, 0.27),
-		  axis.text = element_text(size=24),
-		  axis.title=element_text(size=24),
-		  legend.title = element_text(colour="black", size=24),
-		  legend.text = element_text(colour="black", size=24)) 
-ggsave("figures/rda-traits-all-traits.png", width = 8, height = 6)
+		  axis.text = element_text(size=22),
+		  axis.title=element_text(size=22),
+		  legend.title = element_text(colour="black", size=20),
+		  legend.text = element_text(colour="black", size=20)) 
+ggsave("figures/rda-traits-all-traits.png", width = 9, height = 6.8)
 ggsave("figures/rda-traits-all-traits.pdf", width = 11.5, height = 6.8)
 
 	dims_anc <- dims %>% 
