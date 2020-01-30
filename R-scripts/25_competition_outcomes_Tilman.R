@@ -88,8 +88,12 @@ before_after %>%
 	group_by(ancestry) %>% 
 	mutate(percentage = 100*n/sum(n)) %>% 
 	ggplot(aes(x = ancestry, y = percentage, fill = competition_outcome, label = n)) + geom_bar(stat = "identity") +
-	scale_fill_viridis_d(name = "Competition outcome") + geom_text() + xlab("")
+	scale_fill_viridis_d(name = "Competition outcome") + 
+	geom_text() +
+	xlab("") +
+	theme(legend.position = "top")
 ggsave("figures/before_after_selection_competition_outcomes.png", width = 10, height = 6)
+ggsave("figures/before_after_selection_competition_outcomes.pdf", width = 8, height = 5)
 	
 
 before_after %>% 
@@ -172,11 +176,15 @@ sum(percentages$n)
 
 ### does the breakdown of competitive outcomes differ depending on whether they were selected in the same or different envts?
 
-total_diff <- 374+193+131
+# total_diff <- 374+193+131
+total_diff <- 364+195+139
+# total_diff <- 392+214+151
 total_same <- 29+19+11
+total_same <- 28+19+12
 
-11/total_same*100
-131/total_diff*100
+12/total_same*100
+364/total_diff*100
+
 
 ba_treatments3 <- ba_treatments %>% 
 	mutate(same_envt = ifelse(treatment_pop1 == treatment_pop2, "same_envt", "diff_envt")) %>% 
