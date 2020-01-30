@@ -872,13 +872,15 @@ plot2 <- ggplot() +
 	geom_line(aes(x = change_nstar_mean, y = visregFit), data = fits_pn, color = "black", size = 1) +
 	geom_ribbon(aes(x = change_nstar_mean, ymin = visregLwr, ymax = visregUpr), data = fits_pn, alpha = 0.1) +
 	ylab("Change in P* (uM P)") + xlab("Change in N* (uM N)") +
-	geom_point(aes(x = change_nstar_mean, y = visregRes, color = treatment), data = resids_pn, size = 6) +
-	geom_point(aes(x = change_nstar_mean, y = visregRes), data = resids_pn, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_nstar_mean, y = visregRes, color = treatment), data = resids_pn, size = 4) +
+	geom_point(aes(x = change_nstar_mean, y = visregRes), data = resids_pn, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  axis.title = element_text(size = 24),
 		  axis.text.x = element_text(size = 24),
-		  axis.text.y = element_text(size = 24))
+		  axis.text.y = element_text(size = 24)) +
+	ylim(-3, 2) +
+	xlim(-2, 2)
 ggsave("figures/change_pstar_salt_tol_OLS.png", width = 4.5, height = 3)
 
 ## pstar vs. istar
@@ -898,13 +900,15 @@ plot3 <- ggplot() +
 	geom_ribbon(aes(x = change_istar_mean, ymin = visregLwr, ymax = visregUpr), data = fits_istar, alpha = 0.1) +
 	ylab("Change in P* (uM P)") +
 	xlab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1})))+
-	geom_point(aes(x = change_istar_mean, y = visregRes, color = treatment), data = resids_istar, size = 6) +
-	geom_point(aes(x = change_istar_mean, y = visregRes), data = resids_istar, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_istar_mean, y = visregRes, color = treatment), data = resids_istar, size = 4) +
+	geom_point(aes(x = change_istar_mean, y = visregRes), data = resids_istar, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  axis.title = element_text(size = 24),
 		  axis.text.x = element_text(size = 24),
-		  axis.text.y = element_text(size = 24))
+		  axis.text.y = element_text(size = 24)) +
+	ylim(-3, 2) +
+	xlim(-2, 2)
 ggsave("figures/change_pstar_istar_OLS.png", width = 4, height = 3)
 
 
@@ -951,13 +955,15 @@ plot5 <- ggplot() +
 	geom_ribbon(aes(x = change_istar_mean, ymin = visregLwr, ymax = visregUpr), data = fits_ni, alpha = 0.1) +
 	ylab("Change in N* (uM N)") +
 	xlab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1})))+
-	geom_point(aes(x = change_istar_mean, y = visregRes, color = treatment), data = resids_ni, size = 6) +
-	geom_point(aes(x = change_istar_mean, y = visregRes), data = resids_ni, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_istar_mean, y = visregRes, color = treatment), data = resids_ni, size = 4) +
+	geom_point(aes(x = change_istar_mean, y = visregRes), data = resids_ni, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  axis.title = element_text(size = 24),
 		  axis.text.x = element_text(size = 24),
-		  axis.text.y = element_text(size = 24))
+		  axis.text.y = element_text(size = 24)) + 
+	ylim(-3, 2) +
+	xlim(-2, 2)
 ggsave("figures/change_nstar_istar_OLS.png", width = 4.5, height = 3)
 
 ### nstar vs. salt tolerance
@@ -1099,16 +1105,15 @@ plot9 <- ggplot() +
 	scale_x_reverse() +
 	geom_line(aes(x = change_salt_tol_mean, y = visregFit), data = fits_is, color = "black", size = 1) +
 	geom_ribbon(aes(x = change_salt_tol_mean, ymin = visregLwr, ymax = visregUpr), data = fits_is, alpha = 0.1) +
-	# ylab("Change in I* (umols/m2/s)") +
 	ylab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1})))+
 	xlab("Change in salt tol. (g/L)") +
 	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_is, size = 6) +
 	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_is, shape = 1, color = "black", size = 6) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
-		  axis.title = element_text(size = 24),
+		  axis.title = element_text(size = 24, family = "Lato"),
 		  axis.text.x = element_text(size = 24),
-		  axis.text.y = element_text(size = 24))
+		  axis.text.y = element_text(size = 24)) 
 ggsave("figures/change_istar_salt_tol_OLS.png", width = 4.5, height = 3)
 
 
@@ -1124,7 +1129,7 @@ save_plot("figures/changes-OLS-tradeoffs-big.png", multi_plot_changes,
 
 ### new subset
 
-multi_plot_changes_sub <- plot_grid(plot3, plot5, plot2,  labels = c("A", "B", "C"), align = "v",
+multi_plot_changes_sub <- plot_grid(plot3, plot5, plot2,  labels = c("A", "B", "C"), align = "h",
 								label_size = 20, label_x = 0.22, nrow = 1, ncol = 3)
 
 save_plot("figures/changes-OLS-tradeoffs-big-sub.png", multi_plot_changes_sub,

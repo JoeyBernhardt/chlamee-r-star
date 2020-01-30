@@ -71,7 +71,7 @@ monod_function_slow <- function(x, umax = 1, ks = 0.8, m = 0.5){
 rstar_concept <- data.frame(type = c("fast", "med", "slow"), ks = c(10, 5, 0.8), umax = c(1.5, 1.2, 1)) %>% 
 	mutate(r_star = ks*0.5/(umax-0.5)) 
 	
-View(rstar_concept)
+
 
 rstar_concept %>% 
 	ggplot(aes(x = r_star, y = umax, color = type)) + geom_point(size = 6) + labs(y = expression ("Max growth rate"~day^-1)) +
@@ -126,42 +126,56 @@ ggsave("figures/conceptual-monod.pdf", width = 6, height = 4.6)
 
 ### gleaner opportunist
 
-monod_function_fast <- function(x, umax = 1.5, ks = 10, m = 0.5){
+monod_function_fast <- function(x, umax = 1.5, ks = 10, m = 0){
 	growth_rate <- (umax * x / (ks+x)) - m
 	growth_rate
 } 
 
-monod_function_slow <- function(x, umax = 1, ks = 0.8, m = 0.5){
+monod_function_slow <- function(x, umax = 1, ks = 0.8, m = 0){
 	growth_rate <- (umax * x / (ks+x)) - m
 	growth_rate
 } 
 
 
-	p + stat_function(fun = monod_function_slow, color = "darkgreen", size = 2) +
+	p + geom_hline(yintercept = 0.56, color = "black") +
+		stat_function(fun = monod_function_slow, color = "darkseagreen3", size = 2) +
 		stat_function(fun = monod_function_fast, color = "deepskyblue4", size = 2) +
 		coord_cartesian() + geom_hline(yintercept = 0) +
-		geom_point(aes(x = r_star, y = 0, color = type), data = filter(rstar_concept, type != "med"), size = 7) +
-		geom_point(aes(x = r_star, y = 0), data = filter(rstar_concept, type != "med"), size = 7, shape = 1, color = "black") +
-		labs(y = expression ("Population growth rate"~day^-1)) +
+		# geom_point(aes(x = r_star, y = 0, color = type), data = filter(rstar_concept, type != "med"), size = 7) +
+		# geom_point(aes(x = r_star, y = 0), data = filter(rstar_concept, type != "med"), size = 7, shape = 1, color = "black") +
+		geom_point(aes(x = r_star, y = 0.0), size = 9, color = "darkseagreen3") +
+		geom_point(aes(x = r_star2, y = 0.0), size = 9, color = "deepskyblue4") +
+		geom_point(aes(x = r_star, y = 0.56), size = 9, color = "darkseagreen3", shape = 1) +
+		geom_point(aes(x = r_star2, y = 0.56), size = 9, color = "deepskyblue4", shape = 1) +
+		geom_segment(aes(x = r_star, xend = r_star, y = 0, yend = 0.56), color = "darkseagreen3", size = 1) + 
+		geom_segment(aes(x = r_star2, xend = r_star2, y = 0, yend = 0.56), color = "deepskyblue4", size = 1) + 
+ 		labs(y = expression ("Population growth rate"~day^-1)) +
 		xlab("Resource concentration") +
 		theme( 
 			axis.text = element_text(size=22, color = "black"),
 			axis.title=element_text(size=22, color = "black"),
 			legend.position = "none") +
-		scale_color_manual(values = c("deepskyblue4","darkgreen"), name = "") + 
-		geom_hline(yintercept = 1, color = "deepskyblue4", linetype = "dashed") + xlim(0, 100) +
-		geom_hline(yintercept = 0.5, color = "darkgreen", linetype = "dashed") 
+		scale_color_manual(values = c("deepskyblue4","darkseagreen3"), name = "") + 
+		geom_hline(yintercept = 1.5, color = "deepskyblue4", linetype = "dashed") + xlim(0, 100) +
+		geom_hline(yintercept = 1, color = "darkseagreen3", linetype = "dashed") 
+		
 ggsave("figures/gleaner-opportunist-diagram.pdf", width = 6.6, height = 4.6)
 ggsave("figures/gleaner-opportunist-diagram.png", width = 6.6, height = 5)
 
 
-r_star <-  (0.8*0.5)/(1-0.5)
-r_star2 <-  (10*0.5)/(1.5-0.5)
+r_star <-  (0.8*0.56)/(1 - 0.56)
+r_star2 <-  (10*0.56)/(1.5 - 0.56)
 
-p + geom_point(aes(x = 0.8, y = 0.5), color = "darkgreen", size = 3)  +
-	geom_point(aes(x = 5, y = 1), size = 3, color = "deepskyblue4") +ylab("μmax") +
-	xlab("R*")
-ggsave("figures/gleaner-opportunist-points.pdf", width = 3, height = 2)
+p + geom_point(aes(x = r_star, y = 1), color = "darkseagreen3", size = 4)  +
+	geom_point(aes(x = r_star2, y = 1.5), size = 4, color = "deepskyblue4") +
+	geom_point(aes(x = r_star, y = 1), color = "black", size = 4, shape = 1)  +
+	geom_point(aes(x = r_star2, y = 1.5), size = 4, color = "black", shape = 1) +
+	ylab(expression("" ~ mu * max)) +  
+	xlab("R*") +
+	theme( 
+		axis.text = element_text(size=20, color = "black"),
+		axis.title=element_text(size=20, color = "black"))
+ggsave("figures/gleaner-opportunist-points.pdf", width = 3, height = 2.5)
 ggsave("figures/gleaner-opportunist-points.png", width = 3, height = 2)
 
 

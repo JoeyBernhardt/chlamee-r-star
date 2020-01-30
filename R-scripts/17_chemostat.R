@@ -69,3 +69,10 @@ rfus2 %>%
 
 	write_csv(cell_counts_chemostat, "data-processed/chemostat-cell-counts.csv")
 	
+	
+library(plotrix)	
+	cell_counts_chemostat %>% 
+		filter(week > 29) %>% 
+		group_by(treatment, ancestor_id) %>% 
+		summarise_each(funs(mean, std.error), cell_count) %>% View
+	
