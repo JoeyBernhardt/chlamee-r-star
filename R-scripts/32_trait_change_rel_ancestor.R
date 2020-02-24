@@ -542,7 +542,7 @@ salt <- salt_tol_CI2 %>%
 
 splot <- salt %>% 
 	ggplot(aes(x = treatment, y = change_salt_tol_mean, color = treatment, fill = treatment)) + 
-	geom_pointrange(alpha = 0.6, aes(shape = diversity, size = diversity2, x = unique_treatment,
+	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_salt_tol_mean, ymin = change_salt_tol_lower, ymax = change_salt_tol_upper),
 					position=position_dodge2(width = 0.01), data = salt) +
 	# geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_salt_tol_mean, color = treatment)) +
@@ -659,7 +659,7 @@ cola <- cols_no_anc2
 # light plot --------------------------------------------------------------		
 	iplot <- 	ri %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
-		geom_pointrange(alpha = 0.6, aes(shape = diversity, size = diversity2, x = unique_treatment,
+		geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment,
 										 y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 						position=position_dodge2(width = 0.01), data = ri) +
 			# geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_rstar_mean, color = treatment)) +
@@ -722,7 +722,7 @@ rn <- rstar_CI_n2 %>%
 
 nplot <- rn %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
-	geom_pointrange(alpha = 0.6, aes(shape = diversity, size = diversity2, x = unique_treatment,
+	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 					position=position_dodge2(width = 0.01), data = rn) +
 	#geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_rstar_mean, color = treatment)) +
@@ -774,7 +774,7 @@ rp <- rstar_CI_p2 %>%
 
 pplot <- rp %>% 
 	ggplot(aes(x = treatment, y = change_rstar_mean, color = treatment, fill = treatment)) + 
-	geom_pointrange(alpha = 0.6, aes(shape = diversity, size = diversity2, x = unique_treatment,
+	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 					position=position_dodge2(width = 0.01), data = rp) +
 	#geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_rstar_mean, color = treatment)) +
@@ -792,7 +792,7 @@ pplot <- rp %>%
 	theme(axis.title.x=element_blank(),
 		  axis.text.x=element_blank(),
 		  axis.ticks.x=element_blank()) +
-	scale_y_continuous(labels = scales::number_format(accuracy = 0.1)) 
+	scale_y_continuous(labels = scales::number_format(accuracy = 0.1), breaks = c(-0.5, 0, 0.5, 1)) 
 ggsave("figures/p-star-trait-change-95CI-sub-P-order.pdf", width = 7, height = 3.92)
 ggsave("figures/p-star-trait-change-95CI-sub-P-order-wide.pdf", width = 6, height = 4.5)
 ggsave("figures/p-star-trait-change-95CI-sub-P-order-hor.pdf", width = 4.5, height = 5.6)
