@@ -11,7 +11,13 @@ library(here)
 library(broom)
 
 cbbPalette <- c("black", "#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
-
+cbbPalette <- c('black', "#7f7f7f",
+						  "#00429d",
+						  "#93c4d2",
+						  "#9a9d60",
+						  "#ffa59e",
+						  "#dd4c65",
+						  "#5f0015")
 all_sizes3 <- read_csv("data-processed/all_cell_sizes_low_resources.csv")
 
 light_monod <- read_csv("data-processed/light-monod-params-direct.csv")
@@ -366,7 +372,7 @@ rda_plot <- ggplot() +
 		  legend.title = element_text(colour="black", size=20),
 		  legend.text = element_text(colour="black", size=20)) 
 ggsave("figures/rda-traits-all-traits.png", width = 9, height = 6.8)
-ggsave("figures/rda-traits-all-traits.pdf", width = 9, height = 6.8)
+ggsave("figures/rda-traits-all-traits-cb.pdf", width = 9, height = 6.8)
 
 	dims_anc <- dims %>% 
 	filter(Treatment == "Ancestors") %>% 

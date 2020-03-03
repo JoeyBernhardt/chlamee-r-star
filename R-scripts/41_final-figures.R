@@ -3,8 +3,18 @@ library(PNWColors)
 
 col_vir <- (viridis_pal(option = "magma", begin = 0.8, end = 0.2)(7))
 col_jake <- pnw_palette("Bay",7,type="continuous")
-col_vir <- col_jake[c(1,6,4,7,3,2,5)]
-cols_no_anc <- col_vir
+col_jake2 <- pnw_palette(name="Starfish",n=7,type="discrete")
+col_vir <- col_jake2[c(1,6,4,7,3,2,5)]
+cols_no_anc <- col_jake2
+cols_no_anc <- c('#00429d', '#4b76b4', '#7bacc7', '#dbdbbd', '#ffa59e', '#dd4c65', '#93003a')
+cols_no_anc <- c('#7f7f7f', '#00429d', '#93c4d2', '#9a9d60','#ffa59e','#dd4c65','#5f0015')
+cols_no_anc <- c("#7f7f7f",
+				"#00429d",
+				"#93c4d2",
+				"#9a9d60",
+				"#ffa59e",
+				"#dd4c65",
+				"#5f0015")
 str(col_jake)
 
 q4 <- qualitative_hcl(7, palette = "Dark2")
@@ -14,7 +24,7 @@ library(colorspace)
 
 salt %>% 
 	ggplot(aes(x = treatment, y = change_salt_tol_mean, color = treatment, fill = treatment)) + 
-	geom_pointrange(alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment,
+	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 									 y = change_salt_tol_mean, ymin = change_salt_tol_lower, ymax = change_salt_tol_upper),
 					position=position_dodge2(width = 0.01), data = salt) +
 	geom_hline(yintercept = 0) +
@@ -36,3 +46,4 @@ salt %>%
 		  axis.text.x=element_blank(),
 		  axis.ticks.x=element_blank()) +
 	scale_y_continuous(labels = scales::number_format(accuracy = 1)) 
+ggsave("figures/color-test.png", width = 8, height = 8)

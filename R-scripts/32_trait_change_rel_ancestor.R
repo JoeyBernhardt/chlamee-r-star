@@ -814,7 +814,7 @@ allplots <- plot_grid(pplot, nplot, iplot, splot, labels = c("A", "B", "C", "D")
 					  align = "v", nrow = 2, ncol = 2, label_size = 18, label_x = 0.08, label_y = 1.02)
 
 
-save_plot("figures/all-change-plots.pdf", allplots,
+save_plot("figures/all-change-plots3.pdf", allplots,
 		  ncol = 2, # we're saving a grid plot of 2 columns
 		  nrow = 2, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3
@@ -998,8 +998,8 @@ plot1 <- ggplot() +
 	geom_line(aes(x = change_salt_tol_mean, y = visregFit), data = fits_salt, color = "black", size = 1) +
 	geom_ribbon(aes(x = change_salt_tol_mean, ymin = visregLwr, ymax = visregUpr), data = fits_salt, alpha = 0.1) +
 	ylab("Change in P* (uM P)") + xlab("Change in salt tol. (g/L)") +
-	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_salt, size = 6) +
-	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_salt, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_salt, size = 4) +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_salt, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  	  axis.title = element_text(size = 24),
@@ -1080,8 +1080,8 @@ plot4 <- ggplot() +
 	geom_line(aes(x = change_pstar_mean, y = visregFit), data = fits_np, color = "black", size = 1) +
 	geom_ribbon(aes(x = change_pstar_mean, ymin = visregLwr, ymax = visregUpr), data = fits_np, alpha = 0.1) +
 	ylab("Change in N* (uM N)") + xlab("Change in P* (uM P)") +
-	geom_point(aes(x = change_pstar_mean, y = visregRes, color = treatment), data = resids_np, size = 6) +
-	geom_point(aes(x = change_pstar_mean, y = visregRes), data = resids_np, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_pstar_mean, y = visregRes, color = treatment), data = resids_np, size = 4) +
+	geom_point(aes(x = change_pstar_mean, y = visregRes), data = resids_np, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  axis.title = element_text(size = 24),
@@ -1134,8 +1134,8 @@ plot6 <- ggplot() +
 	geom_line(aes(x = change_salt_tol_mean, y = visregFit), data = fits_ns, color = "black", size = 1) +
 	geom_ribbon(aes(x = change_salt_tol_mean, ymin = visregLwr, ymax = visregUpr), data = fits_ns, alpha = 0.1) +
 	ylab("Change in N* (uM N)") + xlab("Change in salt tol. (g/L)") +
-	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_ns, size = 6) +
-	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_ns, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_ns, size = 4) +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_ns, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  axis.title = element_text(size = 24),
@@ -1162,8 +1162,8 @@ plot7 <- ggplot() +
 	geom_ribbon(aes(x = change_pstar_mean, ymin = visregLwr, ymax = visregUpr), data = fits_ip, alpha = 0.1) +
 	ylab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1})))+
 	xlab("Change in P* (uM P)") +
-	geom_point(aes(x = change_pstar_mean, y = visregRes, color = treatment), data = resids_ip, size = 6) +
-	geom_point(aes(x = change_pstar_mean, y = visregRes), data = resids_ip, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_pstar_mean, y = visregRes, color = treatment), data = resids_ip, size = 4) +
+	geom_point(aes(x = change_pstar_mean, y = visregRes), data = resids_ip, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  axis.title = element_text(size = 24),
@@ -1189,8 +1189,8 @@ plot8 <- ggplot() +
 	geom_ribbon(aes(x = change_nstar_mean, ymin = visregLwr, ymax = visregUpr), data = fits_in, alpha = 0.1) +
 	ylab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1})))+
 	xlab("Change in N* (um N)") +
-	geom_point(aes(x = change_nstar_mean, y = visregRes, color = treatment), data = resids_in, size = 6) +
-	geom_point(aes(x = change_nstar_mean, y = visregRes), data = resids_in, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_nstar_mean, y = visregRes, color = treatment), data = resids_in, size = 4) +
+	geom_point(aes(x = change_nstar_mean, y = visregRes), data = resids_in, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
 		  axis.title = element_text(size = 24),
@@ -1259,11 +1259,11 @@ plot9 <- ggplot() +
 	geom_ribbon(aes(x = change_salt_tol_mean, ymin = visregLwr, ymax = visregUpr), data = fits_is, alpha = 0.1) +
 	ylab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1})))+
 	xlab("Change in salt tol. (g/L)") +
-	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_is, size = 6) +
-	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_is, shape = 1, color = "black", size = 6) +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_is, size = 4) +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_is, shape = 1, color = "black", size = 4) +
 	scale_color_manual(values = c(cols_no_anc), name = "") + 
 	theme(legend.position = "none",
-		  axis.title = element_text(size = 24, family = "Lato"),
+		  axis.title = element_text(size = 24),
 		  axis.text.x = element_text(size = 24),
 		  axis.text.y = element_text(size = 24)) 
 ggsave("figures/change_istar_salt_tol_OLS.png", width = 4.5, height = 3)
@@ -1272,11 +1272,11 @@ ggsave("figures/change_istar_salt_tol_OLS.png", width = 4.5, height = 3)
 multi_plot_changes <- plot_grid(plot3, plot2, plot1, plot4, plot5, plot6, plot7,plot8, plot9,  labels = c("A", "B", "C", "D", "E", "F", "G", "H", "I"), align = "v",
 								label_size = 20, label_x = 0.22)
 
-save_plot("figures/changes-OLS-tradeoffs-big.png", multi_plot_changes,
+save_plot("figures/changes-OLS-tradeoffs-big2.png", multi_plot_changes,
 		  ncol = 3, # we're saving a grid plot of 2 columns
 		  nrow = 3, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3
-		  base_aspect_ratio = 1.2
+		  base_aspect_ratio = 1.3
 )
 
 ### new subset
@@ -1284,7 +1284,7 @@ save_plot("figures/changes-OLS-tradeoffs-big.png", multi_plot_changes,
 multi_plot_changes_sub <- plot_grid(plot3, plot5, plot2,  labels = c("A", "B", "C"), align = "h",
 								label_size = 20, label_x = 0.22, nrow = 1, ncol = 3)
 
-save_plot("figures/changes-OLS-tradeoffs-big-sub.png", multi_plot_changes_sub,
+save_plot("figures/changes-OLS-tradeoffs-big-sub2.png", multi_plot_changes_sub,
 		  ncol = 3, # we're saving a grid plot of 2 columns
 		  nrow = 1, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3
