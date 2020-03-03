@@ -138,15 +138,15 @@ monod_function_slow <- function(x, umax = 1, ks = 0.8, m = 0){
 
 p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 	p + geom_hline(yintercept = 0.56, color = "black") +
-		stat_function(fun = monod_function_slow, color = "darkseagreen3", size = 2) +
+		stat_function(fun = monod_function_slow, color = "darkseagreen4", size = 2) +
 		stat_function(fun = monod_function_fast, color = "deepskyblue4", size = 2) +
 		coord_cartesian() + geom_hline(yintercept = 0) +
 		geom_segment(aes(x = r_star, xend = r_star, y = 0, yend = 0.56), color = "black", linetype = "dashed") + 
 		geom_segment(aes(x = r_star2, xend = r_star2, y = 0, yend = 0.56), color = "black",  linetype = "dashed") + 
 		# geom_point(aes(x = r_star, y = 0, color = type), data = filter(rstar_concept, type != "med"), size = 7) +
 		# geom_point(aes(x = r_star, y = 0), data = filter(rstar_concept, type != "med"), size = 7, shape = 1, color = "black") +
-		geom_point(aes(x = r_star, y = 0.0), size = 9, color = "darkseagreen3") +
-		geom_point(aes(x = r_star2, y = 0.0), size = 9, color = "deepskyblue4") +
+		# geom_point(aes(x = r_star, y = 0.0), size = 2, color = "darkseagreen3") +
+		# geom_point(aes(x = r_star2, y = 0.0), size = 2, color = "deepskyblue4") +
 		# geom_point(aes(x = r_star, y = 0.56), size = 9, color = "darkseagreen3", shape = 1) +
 		# geom_point(aes(x = r_star2, y = 0.56), size = 9, color = "deepskyblue4", shape = 1) +
 		# geom_segment(aes(x = r_star, xend = r_star, y = 0, yend = 0.56), color = "darkseagreen3", size = 1) + 
@@ -154,13 +154,14 @@ p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))
 		
  		labs(y = expression ("Population growth rate"~day^-1)) +
 		xlab("Resource concentration") +
+		ylim(-0.1, 1.5) +
 		theme( 
 			axis.text = element_text(size=22, color = "black"),
 			axis.title=element_text(size=22, color = "black"),
 			legend.position = "none") +
-		scale_color_manual(values = c("deepskyblue4","darkseagreen3"), name = "") + 
+		scale_color_manual(values = c("deepskyblue4","darkseagreen4"), name = "") + 
 		geom_hline(yintercept = 1.5, color = "deepskyblue4", linetype = "dashed") + xlim(0, 100) +
-		geom_hline(yintercept = 1, color = "darkseagreen3", linetype = "dashed") 
+		geom_hline(yintercept = 1, color = "darkseagreen4", linetype = "dashed") 
 		
 ggsave("figures/gleaner-opportunist-diagram.pdf", width = 6.6, height = 4.6)
 ggsave("figures/gleaner-opportunist-diagram.png", width = 6.6, height = 5)
@@ -169,7 +170,7 @@ ggsave("figures/gleaner-opportunist-diagram.png", width = 6.6, height = 5)
 r_star <-  (0.8*0.56)/(1 - 0.56)
 r_star2 <-  (10*0.56)/(1.5 - 0.56)
 
-p + geom_point(aes(x = r_star, y = 1), color = "darkseagreen3", size = 4)  +
+p + geom_point(aes(x = r_star, y = 1), color = "darkseagreen4", size = 4)  +
 	geom_point(aes(x = r_star2, y = 1.5), size = 4, color = "deepskyblue4") +
 	geom_point(aes(x = r_star, y = 1), color = "black", size = 4, shape = 1)  +
 	geom_point(aes(x = r_star2, y = 1.5), size = 4, color = "black", shape = 1) +

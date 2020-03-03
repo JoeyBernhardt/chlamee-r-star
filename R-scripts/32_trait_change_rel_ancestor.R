@@ -4,11 +4,14 @@
 library(tidyverse)
 library(cowplot)
 library(plotrix)
+library(viridis)
 
 theme_set(theme_cowplot())
 
+col_vir <- (viridis_pal(option = "magma", begin = 0.2, end = 1)(7))
+# cols_no_anc  <- c("#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
+cols_no_anc  <- col_vir
 
-cols_no_anc  <- c("#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
 cols_no_anc2  <- c("#6b6b6b", "#f9a729", "#97cfd0", "#00a2b3", "#f1788d", "#cf3e53", "#b9ca5d")
 
 ### Figure 2 trait changes relative to ancestors
@@ -550,7 +553,10 @@ splot <- salt %>%
 	# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
 	geom_hline(yintercept = 0) +
 	ylab(expression("Change in salt tolerance" ~ (g ~ L^{-1}))) +
-	xlab("") + scale_color_manual(values = c("black", cols_no_anc)) +
+	xlab("") + 
+	# scale_color_viridis_d() +
+	# scale_fill_viridis_d() +
+	scale_color_manual(values = c("black", cols_no_anc)) +
 	scale_fill_manual(values = c("black", cols_no_anc)) +
 	theme(legend.position="none",
 		  axis.text = element_text(size=19),
