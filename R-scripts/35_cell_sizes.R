@@ -761,6 +761,15 @@ pcas1 <- as.data.frame(scores(pca_size2, choices = 1:2)$species) %>%
 	mutate(PC2b = PC1 + 0.001)
 pcas$treatment <- unscaled$treatment
 
+cols_no_anc <- c("#7f7f7f",
+				 "#00429d",
+				 "#93c4d2",
+				 "#9a9d60",
+				 "#dfaf66",
+				 "#dd4c65",
+				 "#5f0015")
+cbbPalette <- c('black', cols_no_anc)
+
 pca_plot1 <- pcas %>% 
 	ggplot(aes(x = PC1, y = PC2, color = treatment)) + geom_point(size = 3) +
 	geom_point(size = 3, color = "black", shape = 1) +
@@ -771,7 +780,7 @@ pca_plot1 <- pcas %>%
 	# geom_text(aes(x = PC1, y = PC2, label = trait), data = pcas1, color = "black", size = 4.5, hjust = 0, nudge_x = -0.2, nudge_y = -0.1) +
 	ylab("PC2 (35.76% var)") + xlab("PC1 (38.51% var)") 
 ggsave("figures/pca-plot2.png", width = 8, height = 6)
-
+ggsave("figures/pca-plot3.pdf", width = 7.5, height = 4)
 
 
 library(plyr)

@@ -4,6 +4,8 @@
 library(tidyverse)
 library(cowplot)
 library(here)
+library(readxl)
+library(janitor)
 
 treatments <- read_excel("data-general/ChlamEE_Treatments_JB.xlsx") %>%
 	clean_names() %>%
@@ -317,9 +319,10 @@ ggsave("figures/all_competition_outcomes_barchart.png", width = 14, height = 6)
 
 write_csv(outcomes_allopatry, "data-processed/tilman-competition-outcomes-allopatry.csv")
 
+outcomes_all_together <- read_csv("data-processed/tilman-competition-outcomes-allopatry.csv")
 allo_long <- outcomes_all_together %>% 
 	filter(competition_type == "allopatry") %>% 
-	gather(key = competitor, value = population, pop1, pop2) %>% 
+	gather(key = competitor, value = population, pop1, pop2) %>%
 	left_join(., all_rstars, by = "population")
 
 symp_long <- outcomes_all_together %>% 
@@ -489,6 +492,7 @@ cols <- c("#CC5A9F", "#FF0000", "#2F8C55", "#E9EF28", "#26549C", "#333333", "#DB
 			legend.position = "none") +
 		panel_border(colour = "black", linetype = "solid", size = 0.75)
 	ggsave("figures/tilman-combination-colors-unique-combination29.png", width = 6, height = 5)
+	ggsave("figures/tilman-combination-colors-unique-combination29-newcols.pdf", width = 5, height = 4)
 	
 #### chesson conversions
 	

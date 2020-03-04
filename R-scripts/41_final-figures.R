@@ -15,6 +15,16 @@ cols_no_anc <- c("#7f7f7f",
 				"#ffa59e",
 				"#dd4c65",
 				"#5f0015")
+
+### another less pink option -- this is the one!
+
+cols_no_anc <- c("#7f7f7f",
+	"#00429d",
+	"#93c4d2",
+	"#9a9d60",
+	"#dfaf66",
+	"#dd4c65",
+	"#5f0015")
 str(col_jake)
 
 q4 <- qualitative_hcl(7, palette = "Dark2")

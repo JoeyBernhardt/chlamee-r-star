@@ -18,6 +18,7 @@ cbbPalette <- c('black', "#7f7f7f",
 						  "#ffa59e",
 						  "#dd4c65",
 						  "#5f0015")
+cbbPalette <- c('black', cols_no_anc)
 all_sizes3 <- read_csv("data-processed/all_cell_sizes_low_resources.csv")
 
 light_monod <- read_csv("data-processed/light-monod-params-direct.csv")
@@ -372,7 +373,7 @@ rda_plot <- ggplot() +
 		  legend.title = element_text(colour="black", size=20),
 		  legend.text = element_text(colour="black", size=20)) 
 ggsave("figures/rda-traits-all-traits.png", width = 9, height = 6.8)
-ggsave("figures/rda-traits-all-traits-cb.pdf", width = 9, height = 6.8)
+ggsave("figures/rda-traits-all-traits-cb2.pdf", width = 9, height = 6.8)
 
 	dims_anc <- dims %>% 
 	filter(Treatment == "Ancestors") %>% 

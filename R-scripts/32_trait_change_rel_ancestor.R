@@ -814,7 +814,7 @@ allplots <- plot_grid(pplot, nplot, iplot, splot, labels = c("A", "B", "C", "D")
 					  align = "v", nrow = 2, ncol = 2, label_size = 18, label_x = 0.08, label_y = 1.02)
 
 
-save_plot("figures/all-change-plots3.pdf", allplots,
+save_plot("figures/all-change-plots4.pdf", allplots,
 		  ncol = 2, # we're saving a grid plot of 2 columns
 		  nrow = 2, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3
@@ -1279,12 +1279,33 @@ save_plot("figures/changes-OLS-tradeoffs-big2.png", multi_plot_changes,
 		  base_aspect_ratio = 1.3
 )
 
+
+
+
+
+ggplot() +
+	geom_hline(yintercept = 0) + geom_vline(xintercept = 0)  +
+	scale_x_reverse() +
+	geom_line(aes(x = change_salt_tol_mean, y = visregFit), data = fits_is, color = "black", size = 1) +
+	geom_ribbon(aes(x = change_salt_tol_mean, ymin = visregLwr, ymax = visregUpr), data = fits_is, alpha = 0.1) +
+	ylab(expression("Change in I*" ~ (mu * mol ~ m^{-2} * s^{-1})))+
+	xlab("Change in salt tol. (g/L)") +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes, color = treatment), data = resids_is, size = 4) +
+	geom_point(aes(x = change_salt_tol_mean, y = visregRes), data = resids_is, shape = 1, color = "black", size = 4) +
+	scale_color_manual(values = c(cols_no_anc), name = "") + 
+	theme(legend.position = "top", legend.direction = "horizontal") +
+	guides(colour = guide_legend(nrow = 1))
+ggsave("figures/new-color-legend.pdf", width = 8, height = 4)
+
+
+
+
 ### new subset
 
 multi_plot_changes_sub <- plot_grid(plot3, plot5, plot2,  labels = c("A", "B", "C"), align = "h",
 								label_size = 20, label_x = 0.22, nrow = 1, ncol = 3)
 
-save_plot("figures/changes-OLS-tradeoffs-big-sub2.png", multi_plot_changes_sub,
+save_plot("figures/changes-OLS-tradeoffs-big-sub2.pdf", multi_plot_changes_sub,
 		  ncol = 3, # we're saving a grid plot of 2 columns
 		  nrow = 1, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3
