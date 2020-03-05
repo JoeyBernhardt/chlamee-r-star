@@ -79,8 +79,8 @@ rstar_concept %>%
 	xlab("P* (uM P)") + scale_color_manual(values = c("deepskyblue4", "orange", "purple"), name = "") +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") 
 ggsave("figures/conceptual-monod-trade-off.pdf", width = 6.2, height = 4.6)
@@ -94,8 +94,8 @@ gt <- rstar_concept %>%
  geom_smooth(method = "lm", color = "black", se = FALSE) +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") + 
 	panel_border(colour = "black", size = 1) 
@@ -115,8 +115,8 @@ gp <- p + stat_function(fun = monod_function_slow, color = "lightblue", size = 2
 	xlab("uM P") +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") +
 	scale_color_manual(values = c("deepskyblue4", "orange", "lightblue"), name = "") + 
@@ -216,8 +216,8 @@ bp <-  p + stat_function(fun = bmonod_function_slow, color = "lightblue", size =
 	xlab("uM P") +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") +
 	scale_color_manual(values = c("lightblue", "orange", "deepskyblue4"), name = "") +
@@ -231,8 +231,8 @@ bt <- brstar_concept %>%
 	geom_smooth(method = "lm", color = "black", se = FALSE) +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") +
 	panel_border(colour = "black", size = 1) 
@@ -271,8 +271,8 @@ up <- p + stat_function(fun = umonod_function_slow, color = "lightblue", size = 
 	xlab("uM P") +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") +
 	scale_color_manual(values = c("lightblue", "orange", "deepskyblue4"), name = "") +
@@ -286,8 +286,8 @@ ut <- urstar_concept %>%
 	geom_smooth(method = "lm", color = "black", se = FALSE) +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") +
 	panel_border(colour = "black", size = 1) 
@@ -339,8 +339,8 @@ rp <- p + stat_function(fun = rmonod_function_slow, color = "lightblue", size = 
 	xlab("uM P") +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") +
 	scale_color_manual(values = c("lightblue", "orange", "deepskyblue4"), name = "") +
@@ -354,8 +354,8 @@ rt <- rrstar_concept %>%
 	geom_smooth(method = "lm", color = "black", se = FALSE) +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=18, family = "Arial", color = "black"),
-		axis.title=element_text(size=18, family = "Arial", color = "black"),
+		axis.text = element_text(size=18, color = "black"),
+		axis.title=element_text(size=18, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none") +
 	panel_border(colour = "black", size = 1)  
@@ -368,6 +368,15 @@ save_plot("figures/figure1-conceptual.png", multi_plot,
 		  # each individual subplot should have an aspect ratio of 1.3
 		  base_aspect_ratio = 1.1
 )
+
+
+save_plot("figures/figure1-conceptual.pdf", multi_plot,
+		  ncol = 4, # we're saving a grid plot of 2 columns
+		  nrow = 2, # and 2 rows
+		  # each individual subplot should have an aspect ratio of 1.3
+		  base_aspect_ratio = 1.1
+)
+
 
 ### now make the equivalent R* plot
 
@@ -401,8 +410,8 @@ rstar_concept2 %>%
 	coord_cartesian() +
 	theme( 
 		# plot.margin = unit(c(1,1,1,1), "lines"),
-		axis.text = element_text(size=20, family = "Arial", color = "black"),
-		axis.title=element_text(size=20, family = "Arial", color = "black"),
+		axis.text = element_text(size=20, color = "black"),
+		axis.title=element_text(size=20, color = "black"),
 		rect = element_rect(fill = "transparent"),
 		legend.position = "none")+
 	panel_border(colour = "black") 

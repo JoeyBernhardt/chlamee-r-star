@@ -1152,21 +1152,25 @@ all_sizes3 %>%
 	mutate(diversity = ifelse(ancestor_id == "cc1690", "Genotypically diverse", "Isoclonal")) %>% 
 	filter(!is.na(phosphate_biovolume)) %>% 
 	dplyr::group_by(treatment) %>% 
-	# mutate(mean_biovolume_p = mean(phosphate_biovolume)) %>% 
-	# mutate(se_biovolume_p = std.error(phosphate_biovolume)) %>% 
+	mutate(mean_biovolume_p = mean(phosphate_biovolume)) %>% 
+	mutate(se_biovolume_p = std.error(phosphate_biovolume)) %>% 
 	ungroup() %>% 
 	mutate(treatment = factor(treatment,
 							  levels=c("Ancestors", "C", "L", "N",
 							  		 "P", "B", "S", "BS"))) %>% 
-	ggplot(aes(x = treatment, y = nitrate_length, shape = diversity, color = treatment)) + geom_jitter(width = 0.2) +
+	ggplot(aes(x = treatment, y = phosphate_biovolume, shape = diversity, color = treatment)) +
+	geom_jitter(width = 0.2, size = 2) +
 	# geom_pointrange(alpha = 0.7, aes(color = treatment, x = treatment, y = mean_biovolume_p, ymin = mean_biovolume_p - se_biovolume_p, ymax = mean_biovolume_p + se_biovolume_p),
-	# 				position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
-	# 											  dodge.width = 0.5, seed = 1), size = 0.4) +
-	# geom_point(aes(x = treatment, y = mean_biovolume_p), size = 4, shape = 16) +
-	# geom_errorbar(aes(x = treatment, ymin = mean_biovolume_p - se_biovolume_p, ymax = mean_biovolume_p + se_biovolume_p), width = 0.1) + 
-	scale_color_manual(values = cols_anc, name = "Selection treatment") + ylab("Cell biovolume when P-limited") + xlab("") +
+	#  				position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
+	#  											  dodge.width = 0.5, seed = 1), size = 0.4) +
+	geom_point(aes(x = treatment, y = mean_biovolume_p), size = 4, shape = 16) +
+	geom_errorbar(aes(x = treatment, ymin = mean_biovolume_p - se_biovolume_p, ymax = mean_biovolume_p + se_biovolume_p), width = 0.1) + 
+	scale_color_manual(values = c("black", cols_no_anc), name = "Selection treatment") +
+	scale_shape_manual(values = c(17, 16)) +
+	ylab("Cell biovolume when P-limited") + xlab("") +
 	theme(legend.position = "none")
 ggsave("figures/biovolume-p-limited.png", width = 8, height = 6)
+ggsave("figures/biovolume-p-limited.pdf", width = 8, height = 6)
 
 all_sizes3 %>% 
 	mutate(diversity = ifelse(ancestor_id == "cc1690", "Genotypically diverse", "Isoclonal")) %>% 

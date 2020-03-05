@@ -762,6 +762,62 @@ params %>%
 	facet_wrap( ~ term, scales = "free") + ylab("Parameter value") + xlab("Selection treatment") +
 	theme(legend.position = "none") + xlab("")
 ggsave("figures/EP-params-ancestor-id.png", width = 8, height = 2.5)
+ggsave("figures/EP-params-ancestor-id-cb.pdf", width = 8, height = 2.5)
+
+
+alpha <- params %>% 
+	group_by(treatment, term) %>% 
+	summarise_each(funs(mean, std.error), estimate) %>% 
+	# filter(term == "alpha") %>% 
+	ungroup() %>% 
+	ggplot(aes(x = treatment, y = mean)) + geom_point() +
+	geom_errorbar(aes(ymin = mean - std.error, ymax = mean + std.error), width = 0.1) +
+	geom_point(aes(x = treatment, y = estimate, color = treatment), data = params, size = 2) +
+	scale_color_manual(values = c("black", cols_no_anc), name = "Ancestor") +
+	facet_wrap( ~ term, scales = "free") +
+	ylab("alpha") + xlab("Selection treatment") +
+	theme(legend.position = "none") + xlab("")
+
+iopt <- params %>% 
+	group_by(treatment, term) %>% 
+	summarise_each(funs(mean, std.error), estimate) %>% 
+	filter(term == "Iopt") %>% 
+	ggplot(aes(x = treatment, y = mean)) + geom_point() +
+	geom_errorbar(aes(ymin = mean - std.error, ymax = mean + std.error), width = 0.1) +
+	geom_point(aes(x = treatment, y = estimate, color = treatment), data = params, size = 2) +
+	scale_color_manual(values = c("black", cols_no_anc), name = "Ancestor") +
+	# facet_wrap( ~ term, scales = "free") +
+	ylab("Iopt") + xlab("Selection treatment") +
+	theme(legend.position = "none") + xlab("")
+
+umax <- params %>% 
+	filter(term == "umax") %>% 
+	group_by(treatment, term) %>% 
+	summarise_each(funs(mean, std.error), estimate) %>% 
+	ggplot(aes(x = treatment, y = mean)) + geom_point() +
+	geom_errorbar(aes(ymin = mean - std.error, ymax = mean + std.error), width = 0.1) +
+	geom_point(aes(x = treatment, y = estimate, color = treatment), data = params, size = 2) +
+	scale_color_manual(values = c("black", cols_no_anc), name = "Ancestor") +
+	# facet_wrap( ~ term, scales = "free") +
+	ylab("umax") + xlab("Selection treatment") +
+	theme(legend.position = "none") + xlab("")
+
+
+allplots_light <- plot_grid(alpha, iopt, umax, labels = c("A", "B", "C", "D"),
+					  align = "v", nrow = 1, ncol = 3, label_size = 18, label_x = 0.08, label_y = 1.02)
+
+
+save_plot("figures/allplots_light.pdf", allplots_light,
+		  ncol = 3, # we're saving a grid plot of 2 columns
+		  nrow = 1, # and 2 rows
+		  # each individual subplot should have an aspect ratio of 1.3
+		  base_aspect_ratio = 1.4
+)
+
+
+
+
+
 
 # get predictions
 preds <- fits_many %>%

@@ -57,6 +57,7 @@ cbbPalette <- c("#6b6b6b",
 				"#f1788d",
 				"#cf3e53",
 				"#b9ca5d")
+cbbPalette <- cols_no_anc
 
 map_dfr(
 	c("CC1690", "Anc2", "Anc3", "Anc4", "Anc5"),
@@ -77,7 +78,8 @@ mutations <- map_dfr(
 							  levels=c("C", "L", "N",
 							  		 "P", "B", "S", "BS")))
 write_csv(mutations, "data-processed/mutations.csv")
-
+mutations <- read_csv( "data-processed/mutations.csv")
+library(beyonce)
 plota <- mutations %>% 
 	filter(Strain != "CC1690") %>% 
 	ggplot(aes(x=Treatment, y=mu)) +
@@ -90,6 +92,9 @@ plota <- mutations %>%
 
 plotb <- mutations %>% 
 	filter(Strain != "CC1690") %>% 
+	mutate(Treatment = factor(Treatment,
+							  levels=c("C", "L", "N",
+							  		 "P", "B", "S", "BS"))) %>% 
 	ggplot(aes(x=Strain, y=mu)) +
 	geom_boxplot() +
 	geom_point(aes(color=Treatment), size = 3) +
@@ -98,7 +103,7 @@ plotb <- mutations %>%
 	theme(legend.position = "top")
 
 multi_plot_muts <- plot_grid(plotb, plota, labels = c("A", "B"), align = "h", nrow = 1, ncol = 2, rel_widths = c(1, 0.8))
-save_plot("figures/plot_muts.png", multi_plot_muts,
+save_plot("figures/plot_muts-cb.png", multi_plot_muts,
 		  ncol = 2, # we're saving a grid plot of 2 columns
 		  nrow = 1, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3

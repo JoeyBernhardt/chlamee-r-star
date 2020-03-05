@@ -210,7 +210,7 @@ cv2 %>%
 	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_consvec_mean, ymin = change_consvec_lower, ymax = change_consvec_upper),
 					position=position_dodge2(width = 0.01), data = cv2) +
-	geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_consvec_mean, color = treatment)) +
+	# geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_consvec_mean, color = treatment)) +
 	# geom_bar(width = 0.4, alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 	# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
 	geom_hline(yintercept = 0) +
@@ -225,6 +225,7 @@ cv2 %>%
 	theme(axis.title.x = element_blank(),
 		  axis.text.x=element_blank(),
 		  axis.ticks.x=element_blank()) 
+ggsave("figures/change-pn.pdf", width = 7, height = 4)
 ggsave("figures/change-pn.pdf", width = 7, height = 4)
 
 plot5 <- pcs3 %>%
@@ -280,7 +281,7 @@ scale_color_manual(values = c("black", cols_no_anc)) +
 		geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 									   y = change_pc_mean, ymin = change_pc_lower, ymax = change_pc_upper),
 						position=position_dodge2(width = 0.01), data = pcs4) +
-		geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_pc_mean, color = treatment)) +
+		# geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_pc_mean, color = treatment)) +
 		# geom_bar(width = 0.4, alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 		# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
 		geom_hline(yintercept = 0) +
@@ -379,7 +380,7 @@ ncs4 %>%
 	geom_pointrange(alpha = 1, aes(shape = diversity, size = diversity2, x = unique_treatment,
 								   y = change_nc_mean, ymin = change_nc_lower, ymax = change_nc_upper),
 					position=position_dodge2(width = 0.01), data = ncs4) +
-	geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_nc_mean, color = treatment)) +
+	# geom_segment(alpha = 0.5,  aes(x=unique_treatment, xend=unique_treatment, y=0, yend=change_nc_mean, color = treatment)) +
 	# geom_bar(width = 0.4, alpha = 0.7, aes(shape = diversity, size = diversity2, x = unique_treatment, y = change_rstar_mean, ymin = change_rstar_lower, ymax = change_rstar_upper),
 	# 				position=position_dodge2(width = 0.5), data = ri, stat = "identity") +
 	geom_hline(yintercept = 0) +
@@ -1272,7 +1273,7 @@ ggsave("figures/change_istar_salt_tol_OLS.png", width = 4.5, height = 3)
 multi_plot_changes <- plot_grid(plot3, plot2, plot1, plot4, plot5, plot6, plot7,plot8, plot9,  labels = c("A", "B", "C", "D", "E", "F", "G", "H", "I"), align = "v",
 								label_size = 20, label_x = 0.22)
 
-save_plot("figures/changes-OLS-tradeoffs-big2.png", multi_plot_changes,
+save_plot("figures/changes-OLS-tradeoffs-big2.pdf", multi_plot_changes,
 		  ncol = 3, # we're saving a grid plot of 2 columns
 		  nrow = 3, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3
