@@ -1,7 +1,9 @@
 # chlamee-r-star
 
 
-This repository contains the data and code for Bernhardt et al. 'The evolution of competitive ability for essential resources'.
+This repository contains the data and code for Bernhardt et al. 'The evolution of competitive ability for essential resources'. _Philosophical Transactions of the Royal Society B_. 20190247. http://dx.doi.org/10.1098/rstb.2019.0247 
+
+[![DOI](https://zenodo.org/badge/204966453.svg)](https://zenodo.org/badge/latestdoi/204966453)
 
 The repo is organized into:
 
