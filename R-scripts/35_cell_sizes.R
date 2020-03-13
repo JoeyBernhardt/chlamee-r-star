@@ -1159,7 +1159,7 @@ all_sizes3 %>%
 							  levels=c("Ancestors", "C", "L", "N",
 							  		 "P", "B", "S", "BS"))) %>% 
 	ggplot(aes(x = treatment, y = phosphate_biovolume, shape = diversity, color = treatment)) +
-	geom_jitter(width = 0.2, size = 2) +
+	geom_jitter(width = 0.2, size = 3) +
 	# geom_pointrange(alpha = 0.7, aes(color = treatment, x = treatment, y = mean_biovolume_p, ymin = mean_biovolume_p - se_biovolume_p, ymax = mean_biovolume_p + se_biovolume_p),
 	#  				position=position_jitterdodge(jitter.width = 1.2, jitter.height = 0,
 	#  											  dodge.width = 0.5, seed = 1), size = 0.4) +
@@ -1168,7 +1168,9 @@ all_sizes3 %>%
 	scale_color_manual(values = c("black", cols_no_anc), name = "Selection treatment") +
 	scale_shape_manual(values = c(17, 16)) +
 	ylab("Cell biovolume when P-limited") + xlab("") +
-	theme(legend.position = "none")
+	theme(legend.position = "none") +
+	theme(axis.text=element_text(size=18),
+		  axis.title=element_text(size=18))
 ggsave("figures/biovolume-p-limited.png", width = 8, height = 6)
 ggsave("figures/biovolume-p-limited.pdf", width = 8, height = 6)
 
@@ -1182,11 +1184,18 @@ all_sizes3 %>%
 	mutate(treatment = factor(treatment,
 							  levels=c("Ancestors", "C", "L", "N",
 							  		 "P", "B", "S", "BS"))) %>% 
-	ggplot(aes(x = treatment, y = nitrate_biovolume, shape = diversity, color = treatment)) + geom_jitter(width = 0.2) +
+	ggplot(aes(x = treatment, y = nitrate_biovolume, shape = diversity, color = treatment)) +
+	geom_jitter(width = 0.2, size = 3) +
 	geom_point(aes(x = treatment, y = mean_biovolume_n), size = 4, shape = 16) +
 	geom_errorbar(aes(x = treatment, ymin = mean_biovolume_n - se_biovolume_n, ymax = mean_biovolume_n + se_biovolume_n), width = 0.1) + 
-	scale_color_manual(values = cols_anc) + ylab("Cell biovolume when N-limited") + xlab("")
+	scale_color_manual(values = c("black", cols_no_anc), name = "Selection treatment") +
+	scale_shape_manual(values = c(17, 16)) +
+	ylab("Cell biovolume when N-limited") + xlab("") +
+	theme(legend.position = "none") +
+	theme(axis.text=element_text(size=18),
+		  axis.title=element_text(size=18))
 ggsave("figures/biovolume-n-limited.png", width = 8, height = 6)
+ggsave("figures/biovolume-n-limited.pdf", width = 8, height = 6)
 
 
 ### ok let's get changes in cell size associated with resource limited envts
@@ -1297,8 +1306,17 @@ all_sizes3 %>%
 	mutate(treatment = factor(treatment,
 							  levels=c("Ancestors", "C", "L", "N",
 							  		 "P", "B", "S", "BS"))) %>% 
-	ggplot(aes(x = treatment, y = light_biovolume, shape = diversity, color = treatment, group = ancestor_id)) + geom_jitter(width = 0.2) +
+	ggplot(aes(x = treatment, y = light_biovolume, shape = diversity, color = treatment, group = ancestor_id)) + 
+	geom_jitter(width = 0.2, size = 3) +
 	geom_point(aes(x = treatment, y = mean_biovolume_l), size = 4, shape = 16) +
 	geom_errorbar(aes(x = treatment, ymin = mean_biovolume_l - se_biovolume_l, ymax = mean_biovolume_l + se_biovolume_l), width = 0.1) + 
-	scale_color_manual(values = cols_anc) + ylab("Cell biovolume when light-limited") + xlab("")
+	scale_color_manual(values = cols_anc) +
+	ylab("Cell biovolume when light-limited") + xlab("") +
+	scale_color_manual(values = c("black", cols_no_anc), name = "Selection treatment") +
+	scale_shape_manual(values = c(17, 16)) +
+	 xlab("") +
+	theme(legend.position = "none") +
+	theme(axis.text=element_text(size=18),
+		  axis.title=element_text(size=18))
 ggsave("figures/biovolume-light-limited.png", width = 8, height = 6)
+ggsave("figures/biovolume-light-limited.pdf", width = 8, height = 6)
