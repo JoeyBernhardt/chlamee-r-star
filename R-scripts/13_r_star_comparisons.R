@@ -6,6 +6,7 @@ library(plotrix)
 library(here)
 library(readxl)
 library(janitor)
+theme_set(theme_cowplot())
 
 treatments <- read_excel(here("data-general", "ChlamEE_Treatments_JB.xlsx")) %>%
 	clean_names() %>%
@@ -388,6 +389,10 @@ fold_changes <- all_stars2 %>%
 all_stars3 <- left_join(all_stars2, fold_changes)
 
 write_csv(all_stars3, "data-processed/all-rstars.csv")
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
 all_stars3 <- read_csv("data-processed/all-rstars.csv")
 
 all_stars3 %>% 
@@ -1852,11 +1857,11 @@ r3 <- left_join(all_stars3, lm2)
 
 
 # umax trade-off plots ----------------------------------------------------
-
-
+library(tidyverse)
+m <- 0.56
 p_params <- all_stars3 %>% 
 	mutate(p_star = p_ks*m/(p_umax-m))  %>% 
-	select(population, p_star, p_umax, treatment) %>% 
+	dplyr::select(population, p_star, p_umax, treatment) %>% 
 	dplyr::rename(r_star = p_star,
 		   umax = p_umax) %>% 
 	mutate(resource = "Phosphorus") %>% 
@@ -1947,10 +1952,84 @@ pplot <- p_params %>%
 	ylab(expression("" ~ mu * max ~ (day^{-1}))) 
 ggsave("figures/p-umax.png", width = 4, height = 3)
 
+
+
+### now for illustrator
+iplot <- i_params %>% 
+	ggplot(aes(x = r_star, y = umax)) +  geom_smooth(method = "lm", color = "grey") +
+	coord_cartesian() +
+	# scale_x_reverse() +
+	theme(strip.background = element_blank(),
+		  strip.text.y = element_blank(),
+		  strip.text.x = element_text(size=14, , color = "black")) +
+	theme( 
+		plot.margin = unit(c(1,1,1,1), "lines"),
+		axis.text = element_text(size=22, color = "black"),
+		axis.title=element_text(size=22, color = "black"),
+		rect = element_rect(fill = "transparent"),
+		legend.position = "none") +
+	geom_point(size = 4.5, alpha = 0.7) +
+	geom_point(size = 4.5, shape = 1) +
+	xlab("") + 
+	# ylab("")
+	ylab("") 
+ggsave("figures/i-umax.png", width = 4, height = 3)
+
+nplot <- n_params %>% 
+	ggplot(aes(x = r_star, y = umax)) +  geom_smooth(method = "lm", color = "grey") +
+	coord_cartesian() +
+	# scale_x_reverse() +
+	theme(strip.background = element_blank(),
+		  strip.text.y = element_blank(),
+		  strip.text.x = element_text(size=22, color = "black")) +
+	theme( 
+		plot.margin = unit(c(1,1,1,1), "lines"),
+		axis.text = element_text(size=22, color = "black"),
+		axis.title=element_text(size=22, color = "black"),
+		rect = element_rect(fill = "transparent"),
+		legend.position = "none") +
+	geom_point(size = 4.5, alpha = 0.7) +
+	geom_point(size = 4.5, shape = 1) +
+	xlab("") + 
+	# ylab("")
+	ylab("") 
+ggsave("figures/n-umax.png", width = 4, height = 3)
+
+pplot <- p_params %>% 
+	ggplot(aes(x = r_star, y = umax)) +  geom_smooth(method = "lm", color = "grey") +
+	coord_cartesian() +
+	# scale_x_reverse() +
+	theme(strip.background = element_blank(),
+		  strip.text.y = element_blank(),
+		  strip.text.x = element_text(size=22, color = "black")) +
+	theme( 
+		plot.margin = unit(c(1,1,1,1), "lines"),
+		axis.text = element_text(size=22, color = "black"),
+		axis.title=element_text(size=22, color = "black"),
+		rect = element_rect(fill = "transparent"),
+		legend.position = "none") +
+	geom_point(size = 4.5, alpha = 0.7) +
+	geom_point(size = 4.5, shape = 1) +
+	xlab("") + 
+	ylab("") 
+ggsave("figures/p-umax.png", width = 4, height = 3)
+
+
+
+
+
 multi_tradeoffs <- plot_grid(pplot, nplot, iplot, pca_plot, labels = c("A", "B", "C", "D"), align = "h", ncol = 2, nrow = 2)
 save_plot("figures/trade_offs2_0.56.png", multi_tradeoffs,
 		  ncol = 2, # we're saving a grid plot of 2 columns
 		  nrow = 2, # and 2 rows
+		  # each individual subplot should have an aspect ratio of 1.3
+		  base_aspect_ratio = 1.1
+)
+
+multi_tradeoffs <- plot_grid(pplot, nplot, iplot, align = "h", ncol = 3, nrow = 1)
+save_plot("figures/trade_offs2_0.56.pdf", multi_tradeoffs,
+		  ncol = 3, # we're saving a grid plot of 2 columns
+		  nrow = 1, # and 2 rows
 		  # each individual subplot should have an aspect ratio of 1.3
 		  base_aspect_ratio = 1.1
 )
